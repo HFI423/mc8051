@@ -77,7 +77,7 @@ begin
       variable v_loop : integer;    
       variable v_line : line;
       variable v_rom_data : rom_type;
-      file f_initfile : text is in c_init_file;
+      file f_initfile : text open read_mode is c_init_file;
   begin
     if (not s_init) then
       v_loop := 0;

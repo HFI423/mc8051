@@ -1,4 +1,4 @@
-standard = "87"
+standard = "93"
 preferred_case = "lower"
 
 [libraries.defaultlib]
