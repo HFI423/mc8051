@@ -1,0 +1,5 @@
+standard = "87"
+preferred_case = "lower"
+
+[libraries.defaultlib]
+files = ['vhdl/*.vhd', 'tb/*.vhd']
