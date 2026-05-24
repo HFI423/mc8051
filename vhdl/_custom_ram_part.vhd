@@ -36,7 +36,7 @@ architecture rtl of custom_ram_part is
   shared variable ram : t_ram;
 
 begin
- 
+
     process (clk)
         variable a_adr_int : integer;
     begin
@@ -45,8 +45,14 @@ begin
                 a_adr_int := to_integer(unsigned(a_adr));
                 if a_we = '1' then
                     ram(a_adr_int) := a_di;
+                    a_do <= a_di;
+                else
+                    a_do <= ram(a_adr_int);
                 end if;
-                a_do <= ram(a_adr_int);
+            end if;
+
+            if rst = '1' then
+                a_do <= (others => '0');
             end if;
         end if;
     end process;
@@ -59,10 +65,16 @@ begin
                 b_adr_int := to_integer(unsigned(b_adr));
                 if b_we = '1' then
                     ram(b_adr_int) := b_di;
+                    b_do <= b_di;
+                else
+                    b_do <= ram(b_adr_int);
                 end if;
-                b_do <= ram(b_adr_int);
+            end if;
+
+            if rst = '1' then
+                b_do <= (others => '0');
             end if;
         end if;
     end process;
-  
+
 end architecture;

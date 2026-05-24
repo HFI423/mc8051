@@ -9,8 +9,8 @@ entity custom_ram_tb is
     constant clk_period : time := 1 ns;
     constant data_width : natural := 8;
     constant adr_size : natural := 4;
-    constant chip_data_width : natural := 3;
-    constant chip_adr_size : natural := 3;
+    constant chip_data_width : natural := 8;
+    constant chip_adr_size : natural := 4;
 
     -- Inputs
     signal clk : std_logic := '1';
@@ -92,7 +92,7 @@ begin
         b_adr <= "1001";
         b_di <= "00001111";
         wait for clk_period;
-        assert a_do = "10100101";
+        assert a_do = "11110000";
         a_we <= '0';
         b_we <= '0';
         wait for clk_period;
