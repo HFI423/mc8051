@@ -6,6 +6,8 @@ xise-linux/base_installer
 xise-linux/base
 xise-linux/Xilinx.lic
 
+.direnv
+
 # intermediate build files
 **/*.bgn
 **/*.bit

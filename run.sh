@@ -1,9 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -e
 
 if [ "$#" -eq 0 ]; then
-    echo "Usage: ./run-nolib.sh ENTITY [STOP_TIME, default 1000ns]"
-    echo "Example: ./run-nolib.sh counter_tb"
+    echo "Usage: ./run.sh ENTITY [STOP_TIME, default 1000ns]"
+    echo "Example: ./run.sh tb_mc8051_top_sim_cfg"
     exit 1
 fi
 
