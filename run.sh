@@ -3,7 +3,7 @@ set -e
 
 if [ "$#" -eq 0 ]; then
     echo "Usage: ./run.sh ENTITY [STOP_TIME, default 1000ns]"
-    echo "Example: ./run.sh tb_mc8051_top_sim_cfg"
+    echo "Example: ./run.sh tb_mc8051_top 1ms"
     exit 1
 fi
 
