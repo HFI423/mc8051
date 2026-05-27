@@ -540,9 +540,9 @@ begin
         when "0111" => s_bit_data <= ip(conv_integer(s_preadr(2 downto 0))); 
         when "1010" => s_bit_data <= psw(conv_integer(s_preadr(2 downto 0))); 
         when "1100" => s_bit_data <= acc(conv_integer(s_preadr(2 downto 0))); 
-        when "1101" => s_bit_data <= fpcr(conv_integer(s_preadr(2 downto 0)));
+        when conv_unsigned(ADR_FPCR, 8)(6 downto 3) => s_bit_data <= fpcr(conv_integer(s_preadr(2 downto 0)));
         when "1110" => s_bit_data <= b(conv_integer(s_preadr(2 downto 0))); 
-        when "1111" => s_bit_data <= fpcab(conv_integer(s_preadr(2 downto 0)));
+        when conv_unsigned(ADR_FPCAB, 8)(6 downto 3) => s_bit_data <= fpcab(conv_integer(s_preadr(2 downto 0)));
         when others => s_bit_data <= '0'; 
       end case; 
     else                               -- read one bit from bitadressable GP 
@@ -1194,11 +1194,11 @@ for_siu_edge:
                     end case; 
                   when "1100" => 
                     acc(conv_integer(s_adr(2 downto 0))) <= s_bdata; 
-                  when "1101" =>
+                  when conv_unsigned(ADR_FPCR, 8)(6 downto 3) =>
                     fpcr(conv_integer(s_adr(2 downto 0))) <= s_bdata;
                   when "1110" => 
                     b(conv_integer(s_adr(2 downto 0))) <= s_bdata; 
-                  when "1111" =>
+                  when conv_unsigned(ADR_FPCAB, 8)(6 downto 3) =>
                     fpcab(conv_integer(s_adr(2 downto 0))) <= s_bdata;
                   when others => NULL; 
                 end case; 
