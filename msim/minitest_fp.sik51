@@ -15,7 +15,7 @@ mov F6h, #e8h
 mov F5h, #00h
 mov F4h, #00h
 
-mov F8h, #00h ; ADD
+mov F8h, #01h ; ADD
 
 loop:
 mov P3, EFh
