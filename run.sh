@@ -11,13 +11,13 @@ mkdir -p work
 cd work
 
 echo "Import src and test..."
-ghdl -i --std=93 -fsynopsys --syn-binding $(find ../vhdl -name "*.vhd") $(find ../tb -name "*.vhd")
+ghdl -i --std=93 -fsynopsys -fexplicit --syn-binding $(find ../vhdl -name "*.vhd") $(find ../tb -name "*.vhd")
 
 echo "Make $1..."
-ghdl -m --std=93 -fsynopsys --syn-binding --workdir=. $1
+ghdl -m --std=93 -fsynopsys -fexplicit --syn-binding --workdir=. $1
 
 echo "Run $1..."
-ghdl -r --std=93 -fsynopsys --syn-binding $1 --stop-time=${2:-1000ns} --wave=$1.ghw --assert-level=${3:-error}
+ghdl -r --std=93 -fsynopsys -fexplicit --syn-binding $1 --stop-time=${2:-1000ns} --wave=$1.ghw --assert-level=${3:-error}
 
 echo "Wave $1..."
 gtkwave $1.ghw --rcvar 'do_initial_zoom_fit yes'

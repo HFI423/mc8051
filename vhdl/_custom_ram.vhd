@@ -1,6 +1,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
+use ieee.std_logic_arith.all;
+use ieee.std_logic_unsigned.all;
 use ieee.math_real.all;
 
 entity custom_ram is
@@ -62,10 +63,10 @@ architecture rtl of custom_ram is
   constant part_data_width : natural := minimum(data_width, chip_data_width);
   constant part_adr_size : natural := minimum(adr_size, chip_adr_size);
 
-  signal a_adr_part : unsigned(adr_size-chip_adr_size-1 downto 0);
-  signal a_adr_part_reg : unsigned(adr_size-chip_adr_size-1 downto 0);
-  signal b_adr_part : unsigned(adr_size-chip_adr_size-1 downto 0);
-  signal b_adr_part_reg : unsigned(adr_size-chip_adr_size-1 downto 0);
+  signal a_adr_part : std_logic_vector(adr_size-chip_adr_size-1 downto 0);
+  signal a_adr_part_reg : std_logic_vector(adr_size-chip_adr_size-1 downto 0);
+  signal b_adr_part : std_logic_vector(adr_size-chip_adr_size-1 downto 0);
+  signal b_adr_part_reg : std_logic_vector(adr_size-chip_adr_size-1 downto 0);
 
   type t_parts_do is array (0 to l_num-1) of std_logic_vector(data_width-1 downto 0);
   signal parts_a_en : std_logic_vector(l_num-1 downto 0);
@@ -77,10 +78,10 @@ architecture rtl of custom_ram is
 
 begin
 
-  a_adr_part <= unsigned(a_adr(adr_size-1 downto chip_adr_size));
-  a_do <= parts_a_do(to_integer(a_adr_part_reg));
-  b_adr_part <= unsigned(b_adr(adr_size-1 downto chip_adr_size));
-  b_do <= parts_b_do(to_integer(b_adr_part_reg));
+  a_adr_part <= std_logic_vector(a_adr(adr_size-1 downto chip_adr_size));
+  a_do <= parts_a_do(conv_integer(a_adr_part_reg));
+  b_adr_part <= std_logic_vector(b_adr(adr_size-1 downto chip_adr_size));
+  b_do <= parts_b_do(conv_integer(b_adr_part_reg));
 
   gen_rams_w: for w in 0 to w_num-1 generate
     gen_rams_l: for l in 0 to l_num-1 generate
@@ -93,10 +94,10 @@ begin
       end generate;
 
       gen_ram_ctrl_multi: if l_num /= 1 generate
-        parts_a_en(l) <= '1' when a_en = '1' and a_adr_part = to_unsigned(l, adr_size-chip_adr_size) else '0';
-        parts_a_we(l) <= '1' when a_we = '1' and a_adr_part = to_unsigned(l, adr_size-chip_adr_size) else '0';
-        parts_b_en(l) <= '1' when b_en = '1' and b_adr_part = to_unsigned(l, adr_size-chip_adr_size) else '0';
-        parts_b_we(l) <= '1' when b_we = '1' and b_adr_part = to_unsigned(l, adr_size-chip_adr_size) else '0';
+        parts_a_en(l) <= '1' when a_en = '1' and a_adr_part = conv_std_logic_vector(l, adr_size-chip_adr_size) else '0';
+        parts_a_we(l) <= '1' when a_we = '1' and a_adr_part = conv_std_logic_vector(l, adr_size-chip_adr_size) else '0';
+        parts_b_en(l) <= '1' when b_en = '1' and b_adr_part = conv_std_logic_vector(l, adr_size-chip_adr_size) else '0';
+        parts_b_we(l) <= '1' when b_we = '1' and b_adr_part = conv_std_logic_vector(l, adr_size-chip_adr_size) else '0';
       end generate;
 
       ram_part: entity work.custom_ram_part

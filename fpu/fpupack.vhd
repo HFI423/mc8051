@@ -100,7 +100,7 @@ package body fpupack is
 		variable v_count : std_logic_vector(5 downto 0);	
 	begin
 		v_count := "000000";
-		for i in 0 to s_vector'length-1 loop
+		for i in s_vector'reverse_range loop
 			case s_vector(i) is
 				when '0' => v_count := v_count + "000001";
 				when others => exit;

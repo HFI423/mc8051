@@ -68,6 +68,7 @@
 architecture rtl of control_mem is  
 
    constant ADR_FPCAB : integer range 255 downto 0 := 16#F8#;
+   constant ADR_FPCAB_BA : unsigned(3 downto 0) := "1111"; --conv_unsigned(ADR_FPCAB, 8)(6 downto 3);
 
    constant ADR_FPA3 : integer range 255 downto 0 := 16#FF#;
    constant ADR_FPA2 : integer range 255 downto 0 := 16#FE#;
@@ -80,6 +81,8 @@ architecture rtl of control_mem is
    constant ADR_FPB0 : integer range 255 downto 0 := 16#F4#;
 
    constant ADR_FPCR : integer range 255 downto 0 := 16#E8#;
+   constant ADR_FPCR_BA : unsigned(3 downto 0) := "1101"; --conv_unsigned(ADR_FPCR, 8)(6 downto 3);
+   
 
    constant ADR_FPR3 : integer range 255 downto 0 := 16#EF#;
    constant ADR_FPR2 : integer range 255 downto 0 := 16#EE#;
@@ -537,9 +540,9 @@ begin
         when "0111" => s_bit_data <= ip(conv_integer(s_preadr(2 downto 0))); 
         when "1010" => s_bit_data <= psw(conv_integer(s_preadr(2 downto 0))); 
         when "1100" => s_bit_data <= acc(conv_integer(s_preadr(2 downto 0))); 
-        when conv_unsigned(ADR_FPCR, 8)(6 downto 3) => s_bit_data <= fpcr(conv_integer(s_preadr(2 downto 0)));
+        when ADR_FPCR_BA => s_bit_data <= fpcr(conv_integer(s_preadr(2 downto 0)));
         when "1110" => s_bit_data <= b(conv_integer(s_preadr(2 downto 0))); 
-        when conv_unsigned(ADR_FPCAB, 8)(6 downto 3) => s_bit_data <= s_fpcab(conv_integer(s_preadr(2 downto 0)));
+        when ADR_FPCAB_BA => s_bit_data <= s_fpcab(conv_integer(s_preadr(2 downto 0)));
         when others => s_bit_data <= '0'; 
       end case; 
     else                               -- read one bit from bitadressable GP 
@@ -1186,7 +1189,7 @@ for_siu_edge:
                     acc(conv_integer(s_adr(2 downto 0))) <= s_bdata; 
                   when "1110" => 
                     b(conv_integer(s_adr(2 downto 0))) <= s_bdata; 
-                  when conv_unsigned(ADR_FPCAB, 8)(6 downto 3) =>
+                  when ADR_FPCAB_BA =>
                     s_fpcab(conv_integer(s_adr(2 downto 0))) <= s_bdata;
                   when others => NULL; 
                 end case; 

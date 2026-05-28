@@ -1,6 +1,6 @@
 library ieee;
 use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
+use ieee.std_logic_unsigned.all;
 
 entity ram is
 
@@ -34,7 +34,7 @@ begin
             if rst = '1' then
                 do <= (others => '0');
             else
-                adr_int := to_integer(unsigned(adr));
+                adr_int := conv_integer(adr);
                 if we = '1' then
                     memory(adr_int) <= di;
                 end if;

@@ -1,0 +1,63 @@
+; 28.05.2026 22:28:39
+
+#cpu = 89S8252	; @12 MHz
+
+
+; A
+mov FFh, #3fh
+mov FEh, #c0h
+mov FDh, #00h
+mov FCh, #00h
+
+; B
+mov F7h, #40h
+mov F6h, #e8h
+mov F5h, #00h
+mov F4h, #00h
+
+mov F8h, #00h ; ADD
+
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+
+mov P3, EFh
+mov P2, EEh
+mov P1, EDh
+mov P0, ECh
+
+end
+; * * * Hauptprogramm Ende * * *

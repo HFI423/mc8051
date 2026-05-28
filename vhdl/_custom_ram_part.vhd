@@ -1,6 +1,6 @@
 library ieee;
 use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
+use ieee.std_logic_unsigned.all;
 use ieee.math_real.all;
 
 entity custom_ram_part is
@@ -42,7 +42,7 @@ begin
     begin
         if rising_edge(clk) then
             if a_en = '1' then
-                a_adr_int := to_integer(unsigned(a_adr));
+                a_adr_int := conv_integer(a_adr);
                 if a_we = '1' then
                     ram(a_adr_int) := a_di;
                     a_do <= a_di;
@@ -62,7 +62,7 @@ begin
     begin
         if rising_edge(clk) then
             if b_en = '1' then
-                b_adr_int := to_integer(unsigned(b_adr));
+                b_adr_int := conv_integer(b_adr);
                 if b_we = '1' then
                     ram(b_adr_int) := b_di;
                     b_do <= b_di;
