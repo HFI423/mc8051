@@ -64,7 +64,7 @@
 -------------------------------------------------------------------------------
 architecture soc of mc8051_ramx is
 
-  constant ADR_SIZE : natural := 12;
+  constant ADR_SIZE : natural := 15;
 
 begin
 

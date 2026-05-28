@@ -1,0 +1,53 @@
+library ieee;
+use ieee.std_logic_1164.all;
+package rom_prog is
+constant ADR_SIZE : natural := 15;
+constant ROWS : natural := 2**ADR_SIZE;
+type rom_type is array (0 to ROWS-1) of std_logic_vector(7 downto 0);
+constant rom : rom_type := (
+0 => x"75",
+1 => x"FF",
+2 => x"3F",
+3 => x"75",
+4 => x"FE",
+5 => x"C0",
+6 => x"75",
+7 => x"FD",
+8 => x"00",
+9 => x"75",
+10 => x"FC",
+11 => x"00",
+12 => x"75",
+13 => x"F7",
+14 => x"40",
+15 => x"75",
+16 => x"F6",
+17 => x"E8",
+18 => x"75",
+19 => x"F5",
+20 => x"00",
+21 => x"75",
+22 => x"F4",
+23 => x"00",
+24 => x"75",
+25 => x"F8",
+26 => x"00",
+27 => x"85",
+28 => x"EF",
+29 => x"B0",
+30 => x"85",
+31 => x"EE",
+32 => x"A0",
+33 => x"85",
+34 => x"ED",
+35 => x"90",
+36 => x"85",
+37 => x"E8",
+38 => x"80",
+39 => x"02",
+40 => x"00",
+41 => x"1B",
+42 => x"80",
+43 => x"FE",
+others => x"00");
+end package;

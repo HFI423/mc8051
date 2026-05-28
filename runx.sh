@@ -9,6 +9,8 @@ fi
 
 cd msim
 ./hex2dual $1.h51
-\cp $1.dua ../vhdl/mc8051_rom.dua
+./dua2vhd.sh $1
+\mv $1.dua ../vhdl/mc8051_rom.dua
+\mv $1.vhd ../vhdl/mc8051_rom.vhd
 cd ..
 ./run.sh tb_mc8051_top ${2:-10us}
