@@ -62,30 +62,24 @@
 --
 --
 -------------------------------------------------------------------------------
-architecture sim of mc8051_ramx is
+architecture soc of mc8051_ramx is
 
-   type   ram_type is array (65535 downto 0) of bit_vector(7 downto 0);
+  constant ADR_SIZE : natural := 12;
 
 begin
 
-------------------------------------------------------------------------------- 
--- ram_read_write
-------------------------------------------------------------------------------- 
- 
-  p_readwrite : process (clk, reset)
-  variable  gpram: ram_type;                  -- general purpose RAM
-  begin
-    if reset='1' then
-      ram_data_o <= "00000000";
-      gpram := (others => (others =>'0'));    -- reset every bit
-    else
-      if Rising_Edge(clk) then
-        ram_data_o <= to_stdlogicvector(gpram(conv_integer(unsigned(ram_adr_i))));
-	if ram_wr_i='1' then
-          gpram(conv_integer(unsigned(ram_adr_i))) := to_bitvector(ram_data_i);
-        end if;
-      end if;
-    end if;
-  end process p_readwrite; 
+  ram_inst: entity work.ram
+    generic map(
+        adr_size => ADR_SIZE,
+        data_size => 8
+    )
+    port map(
+        clk => clk,
+        rst => reset,
+        we => ram_wr_i,
+        adr => ram_adr_i(ADR_SIZE-1 downto 0),
+        di => ram_data_i,
+        do => ram_data_o
+    );
   
-end sim;
+end architecture;

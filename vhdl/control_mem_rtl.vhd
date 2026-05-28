@@ -228,24 +228,17 @@ architecture rtl of control_mem is
    signal ssel:         unsigned(7 downto 0);          -- select a SIU-Unit 
 
  -- 8051 Floating Point SFR
-   signal fpcab : std_logic_vector(7 downto 0);
+   signal s_fpcab : std_logic_vector(7 downto 0);
 
-   signal fpa3 : std_logic_vector(7 downto 0);
-   signal fpa2 : std_logic_vector(7 downto 0);
-   signal fpa1 : std_logic_vector(7 downto 0);
-   signal fpa0 : std_logic_vector(7 downto 0);
+   signal s_fpa3 : std_logic_vector(7 downto 0);
+   signal s_fpa2 : std_logic_vector(7 downto 0);
+   signal s_fpa1 : std_logic_vector(7 downto 0);
+   signal s_fpa0 : std_logic_vector(7 downto 0);
 
-   signal fpb3 : std_logic_vector(7 downto 0);
-   signal fpb2 : std_logic_vector(7 downto 0);
-   signal fpb1 : std_logic_vector(7 downto 0);
-   signal fpb0 : std_logic_vector(7 downto 0);
-
-   signal fpcr : std_logic_vector(7 downto 0);
-
-   signal fpr3 : std_logic_vector(7 downto 0);
-   signal fpr2 : std_logic_vector(7 downto 0);
-   signal fpr1 : std_logic_vector(7 downto 0);
-   signal fpr0 : std_logic_vector(7 downto 0);
+   signal s_fpb3 : std_logic_vector(7 downto 0);
+   signal s_fpb2 : std_logic_vector(7 downto 0);
+   signal s_fpb1 : std_logic_vector(7 downto 0);
+   signal s_fpb0 : std_logic_vector(7 downto 0);
 
 
    alias CY : std_logic is psw(7); 
@@ -264,6 +257,10 @@ architecture rtl of control_mem is
    alias PX0: std_logic is ip(0); 
 
 begin 
+
+  fpcab <= s_fpcab;
+  fpa <= s_fpa3 & s_fpa2 & s_fpa1 & s_fpa0;
+  fpb <= s_fpb3 & s_fpb2 & s_fpb1 & s_fpb0;
 
   -- some simple assignments 
  
@@ -476,24 +473,24 @@ begin
             when 16#E0# => s_reg_data <= acc; 
             when 16#F0# => s_reg_data <= b;     
 
-            when ADR_FPCAB => s_reg_data <= unsigned(fpcab);
+            when ADR_FPCAB => s_reg_data <= unsigned(s_fpcab);
 
-            when ADR_FPA3 => s_reg_data <= unsigned(fpa3);
-            when ADR_FPA2 => s_reg_data <= unsigned(fpa2);
-            when ADR_FPA1 => s_reg_data <= unsigned(fpa1);
-            when ADR_FPA0 => s_reg_data <= unsigned(fpa0);
+            when ADR_FPA3 => s_reg_data <= unsigned(s_fpa3);
+            when ADR_FPA2 => s_reg_data <= unsigned(s_fpa2);
+            when ADR_FPA1 => s_reg_data <= unsigned(s_fpa1);
+            when ADR_FPA0 => s_reg_data <= unsigned(s_fpa0);
 
-            when ADR_FPB3 => s_reg_data <= unsigned(fpb3);
-            when ADR_FPB2 => s_reg_data <= unsigned(fpb2);
-            when ADR_FPB1 => s_reg_data <= unsigned(fpb1);
-            when ADR_FPB0 => s_reg_data <= unsigned(fpb0);
+            when ADR_FPB3 => s_reg_data <= unsigned(s_fpb3);
+            when ADR_FPB2 => s_reg_data <= unsigned(s_fpb2);
+            when ADR_FPB1 => s_reg_data <= unsigned(s_fpb1);
+            when ADR_FPB0 => s_reg_data <= unsigned(s_fpb0);
 
             when ADR_FPCR => s_reg_data <= unsigned(fpcr);
 
-            when ADR_FPR3 => s_reg_data <= unsigned(fpr3);
-            when ADR_FPR2 => s_reg_data <= unsigned(fpr2);
-            when ADR_FPR1 => s_reg_data <= unsigned(fpr1);
-            when ADR_FPR0 => s_reg_data <= unsigned(fpr0);
+            when ADR_FPR3 => s_reg_data <= unsigned(fpr(31 downto 24));
+            when ADR_FPR2 => s_reg_data <= unsigned(fpr(23 downto 16));
+            when ADR_FPR1 => s_reg_data <= unsigned(fpr(15 downto 8));
+            when ADR_FPR0 => s_reg_data <= unsigned(fpr(7 downto 0));
 
             when others => s_reg_data <= conv_unsigned(0,8); 
           end case; 
@@ -542,7 +539,7 @@ begin
         when "1100" => s_bit_data <= acc(conv_integer(s_preadr(2 downto 0))); 
         when conv_unsigned(ADR_FPCR, 8)(6 downto 3) => s_bit_data <= fpcr(conv_integer(s_preadr(2 downto 0)));
         when "1110" => s_bit_data <= b(conv_integer(s_preadr(2 downto 0))); 
-        when conv_unsigned(ADR_FPCAB, 8)(6 downto 3) => s_bit_data <= fpcab(conv_integer(s_preadr(2 downto 0)));
+        when conv_unsigned(ADR_FPCAB, 8)(6 downto 3) => s_bit_data <= s_fpcab(conv_integer(s_preadr(2 downto 0)));
         when others => s_bit_data <= '0'; 
       end case; 
     else                               -- read one bit from bitadressable GP 
@@ -1112,24 +1109,17 @@ for_siu_edge:
               when 16#E0# => acc <= s_data; 
               when 16#F0# => b <= s_data;     
 
-              when ADR_FPCAB => fpcab <= std_logic_vector(s_data);
+              when ADR_FPCAB => s_fpcab <= std_logic_vector(s_data);
 
-              when ADR_FPA3 => fpa3 <= std_logic_vector(s_data);
-              when ADR_FPA2 => fpa2 <= std_logic_vector(s_data);
-              when ADR_FPA1 => fpa1 <= std_logic_vector(s_data);
-              when ADR_FPA0 => fpa0 <= std_logic_vector(s_data);
+              when ADR_FPA3 => s_fpa3 <= std_logic_vector(s_data);
+              when ADR_FPA2 => s_fpa2 <= std_logic_vector(s_data);
+              when ADR_FPA1 => s_fpa1 <= std_logic_vector(s_data);
+              when ADR_FPA0 => s_fpa0 <= std_logic_vector(s_data);
 
-              when ADR_FPB3 => fpb3 <= std_logic_vector(s_data);
-              when ADR_FPB2 => fpb2 <= std_logic_vector(s_data);
-              when ADR_FPB1 => fpb1 <= std_logic_vector(s_data);
-              when ADR_FPB0 => fpb0 <= std_logic_vector(s_data);
-
-              when ADR_FPCR => fpcr <= std_logic_vector(s_data);
-
-              when ADR_FPR3 => fpr3 <= std_logic_vector(s_data);
-              when ADR_FPR2 => fpr2 <= std_logic_vector(s_data);
-              when ADR_FPR1 => fpr1 <= std_logic_vector(s_data);
-              when ADR_FPR0 => fpr0 <= std_logic_vector(s_data);
+              when ADR_FPB3 => s_fpb3 <= std_logic_vector(s_data);
+              when ADR_FPB2 => s_fpb2 <= std_logic_vector(s_data);
+              when ADR_FPB1 => s_fpb1 <= std_logic_vector(s_data);
+              when ADR_FPB0 => s_fpb0 <= std_logic_vector(s_data);
 
               when others => NULL; 
               end case; 
@@ -1194,12 +1184,10 @@ for_siu_edge:
                     end case; 
                   when "1100" => 
                     acc(conv_integer(s_adr(2 downto 0))) <= s_bdata; 
-                  when conv_unsigned(ADR_FPCR, 8)(6 downto 3) =>
-                    fpcr(conv_integer(s_adr(2 downto 0))) <= s_bdata;
                   when "1110" => 
                     b(conv_integer(s_adr(2 downto 0))) <= s_bdata; 
                   when conv_unsigned(ADR_FPCAB, 8)(6 downto 3) =>
-                    fpcab(conv_integer(s_adr(2 downto 0))) <= s_bdata;
+                    s_fpcab(conv_integer(s_adr(2 downto 0))) <= s_bdata;
                   when others => NULL; 
                 end case; 
               else                  -- write one bit to bitadressable GP 

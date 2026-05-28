@@ -47,7 +47,7 @@
 --
 --         Author:                 Helmut Mayrhofer
 --
---         Filename:               mc8051_ram_sim_cfg.vhd
+--         Filename:               mc8051_ram_sim.vhd
 --
 --         Date of Creation:       Mon Aug  9 12:14:48 1999
 --
@@ -62,9 +62,26 @@
 --
 --
 -------------------------------------------------------------------------------
-configuration mc8051_ram_sim_cfg of mc8051_ram is
+architecture soc of mc8051_ram is
+
+  signal ram_we : std_logic;
+
+begin
+
+  ram_we <= ram_en_i and ram_wr_i;
+
+  ram_inst: entity work.ram
+    generic map(
+        adr_size => 7,
+        data_size => 8
+    )
+    port map(
+        clk => clk,
+        rst => reset,
+        we => ram_wr_i,
+        adr => ram_adr_i,
+        di => ram_data_i,
+        do => ram_data_o
+    );
   
-  for sim  
-  end for;
-  
-end mc8051_ram_sim_cfg; 
+end architecture;

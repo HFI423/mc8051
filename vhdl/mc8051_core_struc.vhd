@@ -157,7 +157,13 @@ begin                 -- architecture structural
              adrx_o         => adrx_o,
              datax_o        => datax_o,
              wrx_o          => wrx_o,
-             datax_i        => datax_i);
+             datax_i        => datax_i,
+             fpcab => fpcab,
+             fpa => fpa,
+             fpb => fpb,
+             fpcr => fpcr,
+             fpr => fpr
+             );
   
     
   i_mc8051_alu : mc8051_alu

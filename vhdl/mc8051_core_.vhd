@@ -114,7 +114,15 @@ entity mc8051_core is
         datax_i : in  std_logic_vector (7 downto 0);   -- ext. RAM data input
         datax_o : out std_logic_vector (7 downto 0);   -- ext. RAM data output
         adrx_o  : out std_logic_vector (15 downto 0);  -- ext. RAM address
-        wrx_o   : out std_logic);                      -- ext. RAM write enable
+        wrx_o   : out std_logic;                       -- ext. RAM write enable
+
+        -- FPU
+        fpcab : out std_logic_vector(7 downto 0);
+        fpa : out std_logic_vector(31 downto 0);
+        fpb : out std_logic_vector(31 downto 0);
+        fpcr : in std_logic_vector(7 downto 0);
+        fpr : in std_logic_vector(31 downto 0)
+        );
 
 end mc8051_core;
 

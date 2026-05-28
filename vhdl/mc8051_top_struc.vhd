@@ -84,6 +84,12 @@ architecture struc of mc8051_top is
   signal s_ramx_wr:       std_logic;                     -- read (0)/write (1)
                                                          -- ext. RAM
 
+  -- FPU
+  signal fpcab : std_logic_vector(7 downto 0);
+  signal fpa : std_logic_vector(31 downto 0);
+  signal fpb : std_logic_vector(31 downto 0);
+  signal fpcr : std_logic_vector(7 downto 0);
+  signal fpr : std_logic_vector(31 downto 0);
 
 begin                 -- architecture structural
   
@@ -117,7 +123,13 @@ begin                 -- architecture structural
              datax_i     => s_ramx_data_in,
              datax_o     => s_ramx_data_out,
              adrx_o      => s_ramx_adr,
-             wrx_o       => s_ramx_wr);
+             wrx_o       => s_ramx_wr,
+             fpcab => fpcab,
+             fpa => fpa,
+             fpb => fpb,
+             fpcr => fpcr,
+             fpr => fpr
+             );
  
     
   -----------------------------------------------------------------------------
@@ -157,5 +169,14 @@ begin                 -- architecture structural
   -- THIS RAM (IF USED) CAN BE ON OR OFF CHIP, THE SIZE IS ARBITRARY.
   -----------------------------------------------------------------------------
 
+  fpu_wrapper_inst: entity work.fpu_wrapper
+    port map(
+        clk_i => clk,
+        fpcab_i => fpcab,
+        opa_i => fpa,
+        opb_i => fpb,
+        fpcr_o => fpcr,
+        result_o => fpr
+    );
   
 end struc;

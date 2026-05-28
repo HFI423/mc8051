@@ -47,60 +47,22 @@
 --
 --         Author:                 Helmut Mayrhofer
 --
---         Filename:               mc8051_ram_sim.vhd
+--         Filename:               mc8051_rom_sim_cfg.vhd
 --
 --         Date of Creation:       Mon Aug  9 12:14:48 1999
 --
 --         Version:                $Revision: 1.2 $
 --
---         Date of Latest Version: $Date: 2002-01-07 12:16:56 $
+--         Date of Latest Version: $Date: 2002-01-07 12:16:57 $
 --
 --
---         Description: The mc8051 internal RAM model.
+--         Description: The mc8051 ROM model.
 --
 --
 --
 --
 -------------------------------------------------------------------------------
-architecture sim of mc8051_ram is
-
-   type   ram_type is array (127 downto 0) of unsigned(7 downto 0); 
-
-   signal gpram:        ram_type;             -- general purpose RAM 
-
-
-begin
-
------------------------------------------------------------------------------- 
--- ram_read 
------------------------------------------------------------------------------- 
- 
-  p_read : process (clk, reset)
-  begin
-    if reset='1' then
-      ram_data_o <= "00000000";
-    else
-      if Rising_Edge(clk) then
-        ram_data_o <= std_logic_vector(gpram(conv_integer(unsigned(ram_adr_i))));
-      end if;
-    end if;
-  end process p_read; 
-
------------------------------------------------------------------------------- 
--- ram_write
------------------------------------------------------------------------------- 
-
-  p_write : process (clk, reset, ram_en_i)
-  begin
-    if reset='1' then
-      gpram <= (others => (others =>'0'));    -- reset every bit
-    else
-      if Rising_Edge(clk) then
-        if ((ram_en_i='1') and (ram_wr_i='1')) then
-          gpram(conv_integer(unsigned(ram_adr_i))) <= unsigned(ram_data_i);
-        end if;
-      end if;
-    end if;
-  end process p_write;
-  
-end sim;
+configuration mc8051_rom_soc_cfg of mc8051_rom is
+  for soc
+  end for;
+end configuration;

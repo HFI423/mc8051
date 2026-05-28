@@ -47,7 +47,7 @@
 --
 --         Author:                 Helmut Mayrhofer
 --
---         Filename:               mc8051_rom_sim_cfg.vhd
+--         Filename:               mc8051_rom_sim.vhd
 --
 --         Date of Creation:       Mon Aug  9 12:14:48 1999
 --
@@ -62,7 +62,38 @@
 --
 --
 -------------------------------------------------------------------------------
-configuration mc8051_rom_sim_cfg of mc8051_rom is
-  for sim
-  end for;
-end mc8051_rom_sim_cfg;
+architecture soc of mc8051_rom is
+
+  constant ADR_SIZE : natural := 14;
+  constant ROWS : natural := 2**ADR_SIZE;
+
+  type rom_type is array (0 to ROWS-1) of std_logic_vector(7 downto 0);
+
+  impure function init_rom return rom_type is
+    file f_initfile : text open read_mode is c_init_file;
+    variable v_line : line;
+    variable v_rom : rom_type;
+    variable v_data : bit_vector(7 downto 0);
+    variable i : integer := 0;
+  begin
+    while (not endfile(f_initfile) and i < ROWS) loop
+      readline(f_initfile, v_line);
+      read(v_line, v_data);
+      v_rom(i) := to_stdlogicvector(v_data);
+      i := i + 1;
+    end loop;
+    return v_rom;
+  end function;
+
+  signal rom : rom_type := init_rom;
+
+begin
+
+    process(clk)
+    begin
+      if rising_edge(clk) then
+        rom_data_o <= rom(conv_integer(unsigned(rom_adr_i)));
+      end if;
+    end process;
+
+end architecture;

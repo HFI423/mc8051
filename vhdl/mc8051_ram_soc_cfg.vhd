@@ -47,22 +47,24 @@
 --
 --         Author:                 Helmut Mayrhofer
 --
---         Filename:               mc8051_ramx_sim_cfg.vhd
+--         Filename:               mc8051_ram_sim_cfg.vhd
 --
 --         Date of Creation:       Mon Aug  9 12:14:48 1999
 --
 --         Version:                $Revision: 1.2 $
 --
---         Date of Latest Version: $Date: 2002-01-07 12:16:57 $
+--         Date of Latest Version: $Date: 2002-01-07 12:16:56 $
 --
 --
---         Description: The mc8051 external RAM model.
+--         Description: The mc8051 internal RAM model.
 --
 --
 --
 --
 -------------------------------------------------------------------------------
-configuration mc8051_ramx_sim_cfg of mc8051_ramx is 
-    for sim          
-    end for; 
-end mc8051_ramx_sim_cfg; 
+configuration mc8051_ram_soc_cfg of mc8051_ram is
+  
+  for soc  
+  end for;
+  
+end configuration; 

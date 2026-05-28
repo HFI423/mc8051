@@ -262,6 +262,13 @@ begin                 -- architecture structural
              ext0isr_en_i  => s_ext0isr_en ,
              ext1isr_en_i  => s_ext1isr_en ,
              ext0isrh_en_i => s_ext0isrh_en,
-             ext1isrh_en_i => s_ext1isrh_en);
+             ext1isrh_en_i => s_ext1isrh_en,
+             
+             fpcab => fpcab,
+             fpa => fpa,
+             fpb => fpb,
+             fpcr => fpcr,
+             fpr => fpr
+             );
       
 end struc;

@@ -47,7 +47,7 @@
 --
 --         Author:                 Helmut Mayrhofer
 --
---         Filename:               mc8051_rom_sim.vhd
+--         Filename:               mc8051_ramx_sim_cfg.vhd
 --
 --         Date of Creation:       Mon Aug  9 12:14:48 1999
 --
@@ -56,42 +56,13 @@
 --         Date of Latest Version: $Date: 2002-01-07 12:16:57 $
 --
 --
---         Description: The mc8051 ROM model.
+--         Description: The mc8051 external RAM model.
 --
 --
 --
 --
 -------------------------------------------------------------------------------
-architecture sim of mc8051_rom is
-
-   type   rom_type is array (65535 downto 0) of bit_vector(7 downto 0); 
-   signal s_init : boolean := false;
-
-begin
-
------------------------------------------------------------------------------- 
--- rom_read 
------------------------------------------------------------------------------- 
- 
-  p_read : process (clk, reset, rom_adr_i)
-      variable v_loop : integer;    
-      variable v_line : line;
-      variable v_rom_data : rom_type;
-      file f_initfile : text open read_mode is c_init_file;
-  begin
-    if (not s_init) then
-      v_loop := 0;
-      while ((not endfile(f_initfile) and (v_loop < 65535))) loop
-        readline(f_initfile,v_line);
-        read(v_line,v_rom_data(v_loop));
-        v_loop := v_loop + 1;        
-      end loop;
-      s_init <= true;
-    end if;
-    if (clk'event and (clk = '1')) then  -- rising clock edge
-      rom_data_o <= to_stdlogicvector(v_rom_data(conv_integer(unsigned(rom_adr_i))));
-    end if;
-  end process p_read; 
-
-end sim;
-
+configuration mc8051_ramx_soc_cfg of mc8051_ramx is 
+    for soc          
+    end for; 
+end configuration; 

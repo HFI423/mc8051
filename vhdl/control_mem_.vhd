@@ -199,6 +199,14 @@ entity control_mem is
         ext0isr_en_i  : in std_logic;
         ext1isr_en_i  : in std_logic;
         ext0isrh_en_i : in std_logic;
-        ext1isrh_en_i : in std_logic);
+        ext1isrh_en_i : in std_logic;
+        
+        -- FPU
+        fpcab : out std_logic_vector(7 downto 0);
+        fpa : out std_logic_vector(31 downto 0);
+        fpb : out std_logic_vector(31 downto 0);
+        fpcr : in std_logic_vector(7 downto 0);
+        fpr : in std_logic_vector(31 downto 0)
+        );
 
 end control_mem;

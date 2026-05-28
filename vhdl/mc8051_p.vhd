@@ -698,7 +698,14 @@ package mc8051_p is
           ext0isr_en_i   : in std_logic;
           ext1isr_en_i   : in std_logic;
           ext0isrh_en_i  : in std_logic;
-          ext1isrh_en_i  : in std_logic);
+          ext1isrh_en_i  : in std_logic;
+          -- FPU
+          fpcab : out std_logic_vector(7 downto 0);
+          fpa : out std_logic_vector(31 downto 0);
+          fpb : out std_logic_vector(31 downto 0);
+          fpcr : in std_logic_vector(7 downto 0);
+          fpr : in std_logic_vector(31 downto 0)
+          );
 
   end component;
 
@@ -752,7 +759,13 @@ package mc8051_p is
           all_tl0_i      : in  std_logic_vector(8*C_IMPL_N_TMR-1 downto 0);
           all_tl1_i      : in  std_logic_vector(8*C_IMPL_N_TMR-1 downto 0);
           all_th0_i      : in  std_logic_vector(8*C_IMPL_N_TMR-1 downto 0);
-          all_th1_i      : in  std_logic_vector(8*C_IMPL_N_TMR-1 downto 0));
+          all_th1_i      : in  std_logic_vector(8*C_IMPL_N_TMR-1 downto 0);
+          -- FPU
+          fpcab : out std_logic_vector(7 downto 0);
+          fpa : out std_logic_vector(31 downto 0);
+          fpb : out std_logic_vector(31 downto 0);
+          fpcr : in std_logic_vector(7 downto 0);
+          fpr : in std_logic_vector(31 downto 0));
 
   end component;
 
@@ -786,7 +799,14 @@ package mc8051_p is
           datax_i     : in  std_logic_vector (7 downto 0);
           datax_o     : out std_logic_vector (7 downto 0);
           adrx_o      : out std_logic_vector (15 downto 0);
-          wrx_o       : out std_logic);
+          wrx_o       : out std_logic;
+          -- FPU
+          fpcab : out std_logic_vector(7 downto 0);
+          fpa : out std_logic_vector(31 downto 0);
+          fpb : out std_logic_vector(31 downto 0);
+          fpcr : in std_logic_vector(7 downto 0);
+          fpr : in std_logic_vector(31 downto 0)
+          );
 
   end component;
 

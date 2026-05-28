@@ -136,7 +136,15 @@ entity mc8051_control is
         all_tl0_i : in std_logic_vector(8*C_IMPL_N_TMR-1 downto 0);
         all_tl1_i : in std_logic_vector(8*C_IMPL_N_TMR-1 downto 0);
         all_th0_i : in std_logic_vector(8*C_IMPL_N_TMR-1 downto 0);
-        all_th1_i : in std_logic_vector(8*C_IMPL_N_TMR-1 downto 0));
+        all_th1_i : in std_logic_vector(8*C_IMPL_N_TMR-1 downto 0);
+        
+        -- FPU
+        fpcab : out std_logic_vector(7 downto 0);
+        fpa : out std_logic_vector(31 downto 0);
+        fpb : out std_logic_vector(31 downto 0);
+        fpcr : in std_logic_vector(7 downto 0);
+        fpr : in std_logic_vector(31 downto 0)
+        );
 
 end mc8051_control;
 
