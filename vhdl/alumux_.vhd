@@ -45,7 +45,7 @@
 -------------------------------------------------------------------------------
 --
 --
---         Author:                 Roland Höller
+--         Author:                 Roland Hller
 --
 --         Filename:               alumux_.vhd
 --
@@ -73,7 +73,7 @@ use work.mc8051_p.all;
 
 entity alumux is
 
-  generic (DWIDTH : integer := 8);             -- Data width of the ALU
+  generic (DWIDTH : integer := 32);             -- Data width of the ALU
 
   port (
         -- inputs from control unit

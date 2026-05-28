@@ -84,7 +84,7 @@ architecture rtl of control_fsm is
   signal s_nextstate:   t_state;               -- enable signal for state
   signal s_instr_category : t_instr_category;  -- predecoded insturction
   
-  signal s_help:        unsigned (7 downto 0); -- general help-register
+  signal s_help:        unsigned (31 downto 0); -- general help-register
 
   signal s_bit_data :   std_logic;             -- bitdata from MUX
   signal s_intpre:      std_logic;             -- an interrupt must start
@@ -1101,7 +1101,7 @@ begin
               s_adr_mux <= "1110";      -- adress of DPH
               s_nextstate <= EXEC3;
             elsif state=EXEC3 then
-              if s_help=conv_unsigned(0,8) then
+              if s_help=conv_unsigned(0,32) then
                 alu_cmd_o <= INC_RAM;    -- increment operation
                 s_adr_mux <= "1110";     -- adress of DPH
                 s_data_mux <= "0011";    -- data = aludata_i
@@ -1216,7 +1216,7 @@ begin
               s_pc_inc_en <= "0001";    -- increment program-counter
               s_nextstate <= EXEC1;
             elsif state=EXEC1 then
-              if unsigned(acc) /= conv_unsigned(0,8) then
+              if unsigned(acc) /= conv_unsigned(0,32) then
                 s_pc_inc_en <= "0010";  -- add relativ adress to PC
               else
                 s_pc_inc_en <= "0001";  -- increment program-counter
@@ -1231,7 +1231,7 @@ begin
               s_pc_inc_en <= "0001";    -- increment program-counter
               s_nextstate <= EXEC1;
             elsif state=EXEC1 then
-              if unsigned(acc) = conv_unsigned(0,8) then
+              if unsigned(acc) = conv_unsigned(0,32) then
                 s_pc_inc_en <= "0010";         -- add relativ adress to PC
               else
                 s_pc_inc_en <= "0001";         -- increment program-counter

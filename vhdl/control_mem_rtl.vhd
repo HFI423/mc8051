@@ -89,20 +89,20 @@ architecture rtl of control_mem is
    type    t_gprbit is array (15 downto 0) of unsigned(7 downto 0); 
    subtype muxint is integer range C_IMPL_N_TMR-1 downto 0;
 
-   signal s_help:        unsigned (7 downto 0);   -- general help-register 
+   signal s_help:        unsigned (31 downto 0);   -- general help-register 
    signal s_help16:      unsigned (15 downto 0);  -- 16 bit help-register
    signal s_helpb :      std_logic;               -- general help-bit 
    signal s_ir:          unsigned (7 downto 0);   -- reg for saving the command
    signal gprbit:        t_gprbit;         -- bitadressable general purpose RAM
-   signal s_r0_b0:	 unsigned (7 downto 0);   -- Register R0 / Bank 0
-   signal s_r1_b0:	 unsigned (7 downto 0);   -- Register R1 / Bank 0
-   signal s_r0_b1:	 unsigned (7 downto 0);   -- Register R0 / Bank 1
-   signal s_r1_b1:	 unsigned (7 downto 0);   -- Register R1 / Bank 1
-   signal s_r0_b2:	 unsigned (7 downto 0);   -- Register R0 / Bank 2
-   signal s_r1_b2:	 unsigned (7 downto 0);   -- Register R1 / Bank 2
-   signal s_r0_b3:	 unsigned (7 downto 0);   -- Register R0 / Bank 3
-   signal s_r1_b3:	 unsigned (7 downto 0);   -- Register R1 / Bank 3
-   signal s_reg_data:    unsigned (7 downto 0);   -- equals reg_data_o 
+   signal s_r0_b0:	 unsigned (31 downto 0);   -- Register R0 / Bank 0
+   signal s_r1_b0:	 unsigned (31 downto 0);   -- Register R1 / Bank 0
+   signal s_r0_b1:	 unsigned (31 downto 0);   -- Register R0 / Bank 1
+   signal s_r1_b1:	 unsigned (31 downto 0);   -- Register R1 / Bank 1
+   signal s_r0_b2:	 unsigned (31 downto 0);   -- Register R0 / Bank 2
+   signal s_r1_b2:	 unsigned (31 downto 0);   -- Register R1 / Bank 2
+   signal s_r0_b3:	 unsigned (31 downto 0);   -- Register R0 / Bank 3
+   signal s_r1_b3:	 unsigned (31 downto 0);   -- Register R1 / Bank 3
+   signal s_reg_data:    unsigned (31 downto 0);   -- equals reg_data_o 
    Signal state:         t_state;                 -- actual state 
    signal s_command:     std_logic_vector (7 downto 0); 
 
@@ -194,13 +194,13 @@ architecture rtl of control_mem is
    signal pc_plus1:      unsigned(15 downto 0);   -- program counter + 1
    signal pc_plus2:      unsigned(15 downto 0);   -- program counter + 2
 
-   signal s_data    : unsigned(7 downto 0); 
+   signal s_data    : unsigned(31 downto 0); 
    signal s_adr     : unsigned(7 downto 0); 
    signal s_preadr  : unsigned(7 downto 0); 
    signal s_bdata   : std_logic; 
    signal s_rr_adr  : unsigned (7 downto 0);
    signal s_ri_adr  : std_logic_vector (7 downto 0);
-   signal s_ri_data : unsigned (7 downto 0);
+   signal s_ri_data : unsigned (31 downto 0);
   
  -- 8051 standard special-function-register (SFR)
  
@@ -219,8 +219,8 @@ architecture rtl of control_mem is
    signal p3:           unsigned(7 downto 0); 
    signal ip:           std_logic_vector(7 downto 0); 
    signal psw:          std_logic_vector(7 downto 0); 
-   signal acc:          unsigned(7 downto 0); 
-   signal b:            unsigned(7 downto 0); 
+   signal acc:          unsigned(31 downto 0); 
+   signal b:            unsigned(31 downto 0); 
  
  -- 8051 extended special-function-register
  
@@ -274,7 +274,8 @@ begin
   reg_data_o <= std_logic_vector(s_reg_data); 
   ram_data_o <= std_logic_vector(s_data);
   acc_o <= std_logic_vector(acc); 
-  cy_o(1) <= cy; 
+  cy_o(7) <= cy; 
+  cy_o(6 downto 1) <= (others => '0'); 
   ov_o <= ov; 
   cy_o(0) <= ac; 
   
@@ -360,20 +361,27 @@ begin
   s_ri  <= scon(s_ssel)(0);
   s_smod<= s_smodreg(s_ssel);
      
-  p0_o <= std_logic_vector(p0); 
-  p1_o <= std_logic_vector(p1); 
-  p2_o <= std_logic_vector(p2); 
-  p3_o <= std_logic_vector(p3);
+  p0_o(7 downto 0) <= std_logic_vector(p0);
+  p0_o(31 downto 8) <= (others => '0');
+  
+  p1_o(7 downto 0) <= std_logic_vector(p1);
+  p1_o(31 downto 8) <= (others => '0');
+  
+  p2_o(7 downto 0) <= std_logic_vector(p2);
+  p2_o(31 downto 8) <= (others => '0');
+  
+  p3_o(7 downto 0) <= std_logic_vector(p3);
+  p3_o(31 downto 8) <= (others => '0');
  
   s_p <= acc(7) xor acc(6) xor acc(5) xor acc(4) xor 
          acc(3) xor acc(2) xor acc(1) xor acc(0); 
                                     -- P should be set, if the count 
                                     -- of 1 in the acc is even   
  
-  s_command <= rom_data_i when state=FETCH 
+  s_command <= rom_data_i(7 downto 0) when state=FETCH 
          else conv_std_logic_vector(s_ir,8); 
 
-  s_rr_adr <= unsigned((psw and "00011000") or (rom_data_i  
+  s_rr_adr <= unsigned((psw and "00011000") or (rom_data_i(7 downto 0)  
               and "00000111"));     -- calculate registerdirect-adress
              
   s_ri_adr <= ((psw and "00011000") or (s_command(7 downto 0) and "00000001"));
@@ -437,86 +445,89 @@ begin
                        s_r0_b1,s_r1_b1,s_r0_b2,s_r1_b2,s_r0_b3,s_r1_b3,
                        s_smod,s_sm0,s_sm1,s_sm2,s_ren,s_tb8,s_rb8,s_ti,s_ri,
                        s_sbufi,s_th1,s_th0,s_ssel,s_tsel,s_tl1,s_tl0,
-		       ssel,tsel) 
+                       ssel,tsel) 
   begin  
+    s_reg_data(31 downto 8) <= (others => '0'); 
+    
     if s_preadr(7)='1' then 
       case conv_integer(s_preadr) is         -- read one byte of a SFR  
-            when 16#80# => s_reg_data <= unsigned(s_p0);  
-            when 16#81# => s_reg_data <= sp; 
-            when 16#82# => s_reg_data <= dpl; 
-            when 16#83# => s_reg_data <= dph; 
+            when 16#80# => s_reg_data(7 downto 0) <= unsigned(s_p0);  
+            when 16#81# => s_reg_data(7 downto 0) <= sp;           
+            when 16#82# => s_reg_data(7 downto 0) <= dpl;        
+            when 16#83# => s_reg_data(7 downto 0) <= dph;           
             when 16#87# => 
-              s_reg_data(7) <= s_smod;
-              s_reg_data(6 downto 4) <= "000";
-              s_reg_data(3 downto 0) <= pcon;
-            when 16#88# => s_reg_data <= unsigned(tcon(s_tsel));
-            when 16#89# => s_reg_data <= unsigned(tmod(s_tsel));
-            when 16#8A# => s_reg_data <= s_tl0(s_tsel);
-            when 16#8B# => s_reg_data <= s_tl1(s_tsel);
-            when 16#8C# => s_reg_data <= s_th0(s_tsel);
-            when 16#8D# => s_reg_data <= s_th1(s_tsel);
-            when 16#8E# => s_reg_data <= tsel;             
-            when 16#90# => s_reg_data <= unsigned(s_p1); 
+              s_reg_data(7) <= s_smod;                             
+              s_reg_data(6 downto 4) <= "000";                    
+              s_reg_data(3 downto 0) <= pcon;                    
+            when 16#88# => s_reg_data(7 downto 0) <= unsigned(tcon(s_tsel)); 
+            when 16#89# => s_reg_data(7 downto 0) <= unsigned(tmod(s_tsel));
+            when 16#8A# => s_reg_data(7 downto 0) <= s_tl0(s_tsel); 
+            when 16#8B# => s_reg_data(7 downto 0) <= s_tl1(s_tsel);
+            when 16#8C# => s_reg_data(7 downto 0) <= s_th0(s_tsel);  
+            when 16#8D# => s_reg_data(7 downto 0) <= s_th1(s_tsel);   
+            when 16#8E# => s_reg_data(7 downto 0) <= tsel;        
+            when 16#90# => s_reg_data(7 downto 0) <= unsigned(s_p1);
             when 16#98# => 
-              s_reg_data(0) <= s_ri;    -- from SCON register 
-              s_reg_data(1) <= s_ti;    -- from SCON register                
-              s_reg_data(2) <= s_rb8;   -- read extern input!!! 
-              s_reg_data(3) <= s_tb8;   
-              s_reg_data(4) <= s_ren;   
-              s_reg_data(5) <= s_sm2;   
-              s_reg_data(6) <= s_sm1;   
-              s_reg_data(7) <= s_sm0;   
-            when 16#99# => s_reg_data <= s_sbufi(s_ssel);
-            when 16#9A# => s_reg_data <= ssel; 
-            when 16#A0# => s_reg_data <= unsigned(s_p2); 
-            when 16#A8# => s_reg_data <= unsigned(ie);
-            when 16#B0# => s_reg_data <= unsigned(s_p3); 
-            when 16#B8# => s_reg_data <= unsigned(ip);
-            when 16#D0# => s_reg_data <= unsigned(psw);
-            when 16#E0# => s_reg_data <= acc; 
-            when 16#F0# => s_reg_data <= b;     
+              s_reg_data(0) <= s_ri;    -- from SCON register   
+              s_reg_data(1) <= s_ti;    -- from SCON register   
+              s_reg_data(2) <= s_rb8;   -- read extern input!!!    
+              s_reg_data(3) <= s_tb8;                             
+              s_reg_data(4) <= s_ren;                     
+              s_reg_data(5) <= s_sm2;                        
+              s_reg_data(6) <= s_sm1;                             
+              s_reg_data(7) <= s_sm0;                  
+            when 16#99# => s_reg_data(7 downto 0) <= s_sbufi(s_ssel);
+            when 16#9A# => s_reg_data(7 downto 0) <= ssel;  
+            when 16#A0# => s_reg_data(7 downto 0) <= unsigned(s_p2);
+            when 16#A8# => s_reg_data(7 downto 0) <= unsigned(ie);  
+            when 16#B0# => s_reg_data(7 downto 0) <= unsigned(s_p3); 
+            when 16#B8# => s_reg_data(7 downto 0) <= unsigned(ip);  
+            when 16#D0# => s_reg_data(7 downto 0) <= unsigned(psw);  
+            
+            when 16#E0# => s_reg_data <= acc;
+            when 16#F0# => s_reg_data <= b;  
 
-            when ADR_FPCAB => s_reg_data <= unsigned(fpcab);
+            when ADR_FPCAB => s_reg_data(7 downto 0) <= unsigned(fpcab);
 
-            when ADR_FPA3 => s_reg_data <= unsigned(fpa3);
-            when ADR_FPA2 => s_reg_data <= unsigned(fpa2);
-            when ADR_FPA1 => s_reg_data <= unsigned(fpa1);
-            when ADR_FPA0 => s_reg_data <= unsigned(fpa0);
+            when ADR_FPA3 => s_reg_data(7 downto 0) <= unsigned(fpa3);
+            when ADR_FPA2 => s_reg_data(7 downto 0) <= unsigned(fpa2); 
+            when ADR_FPA1 => s_reg_data(7 downto 0) <= unsigned(fpa1); 
+            when ADR_FPA0 => s_reg_data(7 downto 0) <= unsigned(fpa0); 
 
-            when ADR_FPB3 => s_reg_data <= unsigned(fpb3);
-            when ADR_FPB2 => s_reg_data <= unsigned(fpb2);
-            when ADR_FPB1 => s_reg_data <= unsigned(fpb1);
-            when ADR_FPB0 => s_reg_data <= unsigned(fpb0);
+            when ADR_FPB3 => s_reg_data(7 downto 0) <= unsigned(fpb3); 
+            when ADR_FPB2 => s_reg_data(7 downto 0) <= unsigned(fpb2);
+            when ADR_FPB1 => s_reg_data(7 downto 0) <= unsigned(fpb1); 
+            when ADR_FPB0 => s_reg_data(7 downto 0) <= unsigned(fpb0); 
 
-            when ADR_FPCR => s_reg_data <= unsigned(fpcr);
+            when ADR_FPCR => s_reg_data(7 downto 0) <= unsigned(fpcr);
 
-            when ADR_FPR3 => s_reg_data <= unsigned(fpr3);
-            when ADR_FPR2 => s_reg_data <= unsigned(fpr2);
-            when ADR_FPR1 => s_reg_data <= unsigned(fpr1);
-            when ADR_FPR0 => s_reg_data <= unsigned(fpr0);
+            when ADR_FPR3 => s_reg_data(7 downto 0) <= unsigned(fpr3); 
+            when ADR_FPR2 => s_reg_data(7 downto 0) <= unsigned(fpr2); 
+            when ADR_FPR1 => s_reg_data(7 downto 0) <= unsigned(fpr1); 
+            when ADR_FPR0 => s_reg_data(7 downto 0) <= unsigned(fpr0); 
 
-            when others => s_reg_data <= conv_unsigned(0,8); 
+            when others => s_reg_data(7 downto 0) <= conv_unsigned(0,8);
           end case; 
-                                 -- read one byte to bitadressable GPR 
+                                         -- read one byte to bitadressable GPR 
     elsif conv_std_logic_vector(s_preadr(7 downto 4),4)="0010" then   
-            s_reg_data <= gprbit(conv_integer(s_preadr(3 downto 0)));  
+            s_reg_data(7 downto 0) <= gprbit(conv_integer(s_preadr(3 downto 0)));
              
     elsif conv_std_logic_vector(s_preadr,8)="00000000" then
-            s_reg_data <= s_r0_b0;     -- read R0 / Bank 0
+            s_reg_data <= s_r0_b0;
     elsif conv_std_logic_vector(s_preadr,8)="00000001" then
-            s_reg_data <= s_r1_b0;     -- read R1 / Bank 0
+            s_reg_data <= s_r1_b0;
     elsif conv_std_logic_vector(s_preadr,8)="00001000" then
-            s_reg_data <= s_r0_b1;     -- read R0 / Bank 1
+            s_reg_data <= s_r0_b1; 
     elsif conv_std_logic_vector(s_preadr,8)="00001001" then
-            s_reg_data <= s_r1_b1;     -- read R1 / Bank 1
+            s_reg_data <= s_r1_b1;  
     elsif conv_std_logic_vector(s_preadr,8)="00010000" then
-            s_reg_data <= s_r0_b2;     -- read R0 / Bank 2
+            s_reg_data <= s_r0_b2;  
     elsif conv_std_logic_vector(s_preadr,8)="00010001" then
-            s_reg_data <= s_r1_b2;     -- read R1 / Bank 2
+            s_reg_data <= s_r1_b2;  
     elsif conv_std_logic_vector(s_preadr,8)="00011000" then
-            s_reg_data <= s_r0_b3;     -- read R0 / Bank 3
+            s_reg_data <= s_r0_b3;   
     elsif conv_std_logic_vector(s_preadr,8)="00011001" then
-            s_reg_data <= s_r1_b3;     -- read R1 / Bank 3
+            s_reg_data <= s_r1_b3;  
      
     else                               -- read on general purpose RAM 
             s_reg_data <= unsigned(ram_data_i); 
@@ -696,28 +707,41 @@ for_siu_edge:
 		     datax_i) 
   begin
     case s_data_mux is
-      when "0000" => s_data <= conv_unsigned(0,8);
-      when "0001" => s_data <= pc(7 downto 0);
-      when "0010" => s_data <= pc(15 downto 8);
+      when "0000" => s_data <= conv_unsigned(0,32);
+      when "0001" => 
+        s_data(7 downto 0) <= pc(7 downto 0);
+        s_data(31 downto 8) <= (others => '0');
+      when "0010" => 
+        s_data(7 downto 0) <= pc(15 downto 8);
+        s_data(31 downto 8) <= (others => '0');
       when "0011" => s_data <= unsigned(aludata_i);
       when "0100" => s_data <= s_reg_data;
       when "0101" => s_data <= unsigned(rom_data_i);
-      when "0110" => s_data <= acc;
-      when "0111" => 
+      when "0110" => s_data <= acc;  
+      when "0111" =>  
+        s_data(31 downto 8) <= acc(31 downto 8);
         s_data(7 downto 4) <= acc(3 downto 0);
         s_data(3 downto 0) <= acc(7 downto 4);
       when "1000" => s_data <= s_help;
       when "1001" => 
+        s_data(31 downto 8) <= s_reg_data(31 downto 8);
         s_data(7 downto 4) <= s_reg_data(7 downto 4);
         s_data(3 downto 0) <= s_help(3 downto 0);
       when "1010" => 
+        s_data(31 downto 8) <= acc(31 downto 8);
         s_data(7 downto 4) <= acc(7 downto 4);
         s_data(3 downto 0) <= s_reg_data(3 downto 0);
-      when "1100" => s_data <= s_help16(7 downto 0);
-      when "1101" => s_data <= s_help16(15 downto 8);
-      when "1110" => s_data <= pc_plus2(7 downto 0);
+      when "1100" => 
+        s_data(7 downto 0) <= s_help16(7 downto 0);
+        s_data(31 downto 8) <= (others => '0');
+      when "1101" => 
+        s_data(7 downto 0) <= s_help16(15 downto 8);
+        s_data(31 downto 8) <= (others => '0');
+      when "1110" => 
+        s_data(7 downto 0) <= pc_plus2(7 downto 0);
+        s_data(31 downto 8) <= (others => '0');
       when "1111" => s_data <= unsigned(datax_i);
-      when others => s_data <= conv_unsigned(0,8);
+      when others => s_data <= conv_unsigned(0,32);
     end case;
 
     case s_bdata_mux is
@@ -744,10 +768,10 @@ for_siu_edge:
       when "0100" => s_adr <= conv_unsigned(16#8F#,8); 
       when "0101" => s_adr <= sp;
       when "0110" => s_adr <= s_rr_adr;
-      when "0111" => s_adr <= s_ri_data;
-      when "1000" => s_adr <= unsigned(rom_data_i);
-      when "1001" => s_adr <= s_reg_data;
-      when "1010" => s_adr <= s_help ;
+      when "0111" => s_adr <= s_ri_data(7 downto 0);
+      when "1000" => s_adr <= unsigned(rom_data_i(7 downto 0));
+      when "1001" => s_adr <= s_reg_data(7 downto 0);
+      when "1010" => s_adr <= s_help(7 downto 0);
       when "1011" => s_adr <= conv_unsigned(16#D7#,8); 
       when "1100" => s_adr <= conv_unsigned(16#F0#,8);
       when "1101" => s_adr <= conv_unsigned(16#82#,8); 
@@ -763,7 +787,7 @@ for_siu_edge:
         adrx_o(7 downto 0) <= std_logic_vector(dpl); 
       when "10" => 
         adrx_o(15 downto 8) <= (others => '0'); 
-        adrx_o(7 downto 0) <= std_logic_vector(s_ri_data); 
+        adrx_o(7 downto 0) <= std_logic_vector(s_ri_data(7 downto 0)); 
       when others => adrx_o <= (others => '0');
     end case;
           
@@ -829,7 +853,7 @@ for_siu_edge:
         state <= s_nextstate;                        -- update current state
 
         if state=FETCH then 
-          s_ir <= unsigned(rom_data_i);              -- save OP-Code in IR 
+          s_ir <= unsigned(rom_data_i(7 downto 0));
         end if; 
         
         case s_help_en is
@@ -837,12 +861,14 @@ for_siu_edge:
           when "0001" => s_help <= unsigned(rom_data_i);
           when "0010" => s_help <= unsigned(aludata_i);
           when "0011" => s_help <= s_reg_data;
-          when "0100" => s_help <= s_rr_adr;
-          when "0101" => s_help <= conv_unsigned(16#03#,8);
-          when "0110" => s_help <= conv_unsigned(16#0B#,8);
-          when "0111" => s_help <= conv_unsigned(16#13#,8); 
-          when "1000" => s_help <= conv_unsigned(16#1B#,8);
-          when "1001" => s_help <= conv_unsigned(16#23#,8);
+          when "0100" => 
+            s_help(7 downto 0) <= s_rr_adr;
+            s_help(31 downto 8) <= (others => '0');
+          when "0101" => s_help <= conv_unsigned(16#03#,32);
+          when "0110" => s_help <= conv_unsigned(16#0B#,32);
+          when "0111" => s_help <= conv_unsigned(16#13#,32); 
+          when "1000" => s_help <= conv_unsigned(16#1B#,32); 
+          when "1001" => s_help <= conv_unsigned(16#23#,32); 
           when "1010" => s_help <= acc;
           when others => NULL;
         end case;
@@ -896,10 +922,10 @@ for_siu_edge:
 
         pc <= pc_comb;               -- write pc-register
 
-	s_p0 <= p0_i;
-	s_p1 <= p1_i;
-	s_p2 <= p2_i;
-	s_p3 <= p3_i;
+	s_p0 <= p0_i(7 downto 0);
+	s_p1 <= p1_i(7 downto 0);
+	s_p2 <= p2_i(7 downto 0);
+	s_p3 <= p3_i(7 downto 0);
 
       end if;
     end if;
@@ -922,24 +948,24 @@ for_siu_edge:
       when "0001" =>                  -- increment PC 
         pc_comb <= pc_plus1; 
       when "0010" =>                  -- for relativ jumps and calls 
-        pc_comb <= conv_unsigned(pc_plus1 + signed(rom_data_i),16);  
+        pc_comb <= conv_unsigned(pc_plus1 + signed(rom_data_i(7 downto 0)),16);  
       when "0011" =>                  -- load interrupt vectoradress
         pc_comb(15 downto 8) <= conv_unsigned(0,8);
-        pc_comb(7 downto 0) <= s_help; 
+        pc_comb(7 downto 0) <= s_help(7 downto 0); 
       when "0100" =>                  -- ACALL and AJMP
         pc_comb(15 downto 11) <= s_help16(15 downto 11);
         pc_comb(10 downto 8) <= s_ir(7 downto 5);
-        pc_comb(7 downto 0) <= unsigned(rom_data_i);
+        pc_comb(7 downto 0) <= unsigned(rom_data_i(7 downto 0));
       when "0101" =>                  -- JMP_A_DPTR, MOVC_A_ATDPTR
         pc_comb <= v_dptr + conv_unsigned(acc,8); 
       when "0110" =>                  -- MOVC
         pc_comb <= s_help16;
       when "0111" =>                  -- LJMP, LCALL
-        pc_comb(15 downto 8) <= s_help;
-        pc_comb(7 downto 0) <= unsigned(rom_data_i);
+        pc_comb(15 downto 8) <= s_help(7 downto 0); 
+        pc_comb(7 downto 0) <= unsigned(rom_data_i(7 downto 0));
       when "1000" =>                  -- RET, RETI
-        pc_comb(15 downto 8) <= s_help;
-        pc_comb(7 downto 0) <= s_reg_data;
+        pc_comb(15 downto 8) <= s_help(7 downto 0);
+        pc_comb(7 downto 0) <= s_reg_data(7 downto 0);
       when "1001" =>                  -- MOVC_A_ATPC
         pc_comb <= pc_plus1 + conv_unsigned(acc,8);
       when others => pc_comb <= pc;
@@ -972,14 +998,14 @@ for_siu_edge:
       gprbit(13) <= conv_unsigned(0,8);                                        
       gprbit(14) <= conv_unsigned(0,8);                                        
       gprbit(15) <= conv_unsigned(0,8);
-      s_r0_b0 <= conv_unsigned(0,8);
-      s_r1_b0 <= conv_unsigned(0,8);
-      s_r0_b1 <= conv_unsigned(0,8);
-      s_r1_b1 <= conv_unsigned(0,8);
-      s_r0_b2 <= conv_unsigned(0,8);
-      s_r1_b2 <= conv_unsigned(0,8);
-      s_r0_b3 <= conv_unsigned(0,8);
-      s_r1_b3 <= conv_unsigned(0,8);
+      s_r0_b0 <= conv_unsigned(0,32);
+      s_r1_b0 <= conv_unsigned(0,32);
+      s_r0_b1 <= conv_unsigned(0,32);
+      s_r1_b1 <= conv_unsigned(0,32);
+      s_r0_b2 <= conv_unsigned(0,32);
+      s_r1_b2 <= conv_unsigned(0,32);
+      s_r0_b3 <= conv_unsigned(0,32);
+      s_r1_b3 <= conv_unsigned(0,32);
       p0 <= conv_unsigned(255,8);                            
       sp <= conv_unsigned(7,8);    
       dpl <= conv_unsigned(0,8);                           
@@ -998,8 +1024,8 @@ for_siu_edge:
       p3 <= conv_unsigned(255,8);                            
       ip <= conv_std_logic_vector(0,8);                            
       psw <= conv_std_logic_vector(0,8);  
-      acc <= conv_unsigned(0,8);                           
-      b <= conv_unsigned(0,8); 
+      acc <= conv_unsigned(0,32);                           
+      b <= conv_unsigned(0,32); 
       s_reload <= (others => (others => '0'));
       all_wt_en_o <= (others => '0'); 
       s_wt <= (others => (others => '0')); 
@@ -1044,14 +1070,14 @@ for_siu_edge:
             acc <= s_data; 
           when "011" =>                 -- write to ACC and PSW
             acc <= s_data; 
-            psw(7) <= new_cy_i(1);
-            psw(6) <= new_cy_i(0);
-            psw(2) <= new_ov_i;
+          psw(7) <= new_cy_i(7);        
+          psw(6) <= new_cy_i(0); 
+          psw(2) <= new_ov_i;
           when "100" | "101" =>
             case s_regs_wr_en is                  -- sp register
               when "100" =>
                 if conv_integer(s_adr) = 16#81# then
-                  sp <= s_data;
+                  sp <= s_data(7 downto 0);
                 end if;
               when "101" =>
                 if (s_intblock='0' and s_intpre='1' and state=FETCH) or s_intpre2='1' then
@@ -1059,7 +1085,7 @@ for_siu_edge:
                 else
                   if s_command = POP then
                     if (conv_integer(s_adr) = 16#81#) then
-                      sp <= s_data;
+                      sp <= s_data(7 downto 0);
                     else
                       sp <= sp - conv_unsigned(1, 1);
                     end if;
@@ -1072,89 +1098,90 @@ for_siu_edge:
             
             if s_adr(7)='1' then 
               case conv_integer(s_adr) is         -- write one byte of a SFR  
-              when 16#80# => p0 <= s_data;                
-              when 16#82# => dpl <= s_data; 
-              when 16#83# => dph <= s_data; 
+              when 16#80# => p0 <= s_data(7 downto 0);        
+              when 16#82# => dpl <= s_data(7 downto 0);        
+              when 16#83# => dph <= s_data(7 downto 0);          
               when 16#87# => 
-                pcon <= s_data(3 downto 0); 
-                s_smodreg(s_ssel) <= s_data(7);
-              when 16#88# => tcon(s_tsel) <= std_logic_vector(s_data);
-              when 16#89# => tmod(s_tsel) <= s_data;
+                pcon <= s_data(3 downto 0);                       
+                s_smodreg(s_ssel) <= s_data(7);                   
+              when 16#88# => tcon(s_tsel) <= std_logic_vector(s_data(7 downto 0)); 
+              when 16#89# => tmod(s_tsel) <= s_data(7 downto 0);  
               when 16#8A# => 
-                  s_reload(s_tsel) <= s_data;  -- tl0 
+                  s_reload(s_tsel) <= s_data(7 downto 0);  -- tl0   
                   s_wt(s_tsel) <= "00"; 
                   all_wt_en_o(s_tsel) <= '1'; 
               when 16#8B# => 
-                  s_reload(s_tsel) <= s_data;  -- tl1
+                  s_reload(s_tsel) <= s_data(7 downto 0);  -- tl1  
                   s_wt(s_tsel) <= "01"; 
                   all_wt_en_o(s_tsel) <= '1'; 
               when 16#8C# => 
-                  s_reload(s_tsel) <= s_data;  -- th0 
+                  s_reload(s_tsel) <= s_data(7 downto 0);  -- th0 
                   s_wt(s_tsel) <= "10"; 
                   all_wt_en_o(s_tsel) <= '1'; 
               when 16#8D# => 
-                  s_reload(s_tsel) <= s_data;  -- th1 
+                  s_reload(s_tsel) <= s_data(7 downto 0);  -- th1
                   s_wt(s_tsel) <= "11"; 
                   all_wt_en_o(s_tsel) <= '1'; 
-              when 16#8E# => tsel <= s_data; 
-              when 16#90# => p1 <= s_data; 
-              when 16#98# => scon(s_ssel) <= std_logic_vector(s_data);
+              when 16#8E# => tsel <= s_data(7 downto 0);       
+              when 16#90# => p1 <= s_data(7 downto 0);           
+              when 16#98# => scon(s_ssel) <= std_logic_vector(s_data(7 downto 0)); 
               when 16#99# => 
-                sbuf(s_ssel) <= s_data;
+                sbuf(s_ssel) <= s_data(7 downto 0);               
                 all_trans_o(s_ssel) <= '1'; 
-              when 16#9A# => ssel <= s_data; 
-              when 16#A0# => p2 <= s_data; 
-              when 16#A8# => ie <= conv_std_logic_vector(s_data,8); 
-              when 16#B0# => p3 <= s_data; 
-              when 16#B8# => ip <= conv_std_logic_vector(s_data,8); 
+              when 16#9A# => ssel <= s_data(7 downto 0);         
+              when 16#A0# => p2 <= s_data(7 downto 0);            
+              when 16#A8# => ie <= std_logic_vector(s_data(7 downto 0)); 
+              when 16#B0# => p3 <= s_data(7 downto 0);              
+              when 16#B8# => ip <= std_logic_vector(s_data(7 downto 0)); 
               when 16#D0# =>  
-                psw(7 downto 1) <= conv_std_logic_vector(s_data(7 downto 1),7);
-              when 16#E0# => acc <= s_data; 
-              when 16#F0# => b <= s_data;     
+                psw(7 downto 1) <= std_logic_vector(s_data(7 downto 1)); 
+                
+              when 16#E0# => acc <= s_data;  
+              when 16#F0# => b <= s_data;   
 
-              when ADR_FPCAB => fpcab <= std_logic_vector(s_data);
+              when ADR_FPCAB => fpcab <= std_logic_vector(s_data(7 downto 0));
 
-              when ADR_FPA3 => fpa3 <= std_logic_vector(s_data);
-              when ADR_FPA2 => fpa2 <= std_logic_vector(s_data);
-              when ADR_FPA1 => fpa1 <= std_logic_vector(s_data);
-              when ADR_FPA0 => fpa0 <= std_logic_vector(s_data);
+              when ADR_FPA3 => fpa3 <= std_logic_vector(s_data(7 downto 0)); 
+              when ADR_FPA2 => fpa2 <= std_logic_vector(s_data(7 downto 0)); 
+              when ADR_FPA1 => fpa1 <= std_logic_vector(s_data(7 downto 0)); 
+              when ADR_FPA0 => fpa0 <= std_logic_vector(s_data(7 downto 0)); 
 
-              when ADR_FPB3 => fpb3 <= std_logic_vector(s_data);
-              when ADR_FPB2 => fpb2 <= std_logic_vector(s_data);
-              when ADR_FPB1 => fpb1 <= std_logic_vector(s_data);
-              when ADR_FPB0 => fpb0 <= std_logic_vector(s_data);
+              when ADR_FPB3 => fpb3 <= std_logic_vector(s_data(7 downto 0)); 
+              when ADR_FPB2 => fpb2 <= std_logic_vector(s_data(7 downto 0)); 
+              when ADR_FPB1 => fpb1 <= std_logic_vector(s_data(7 downto 0)); 
+              when ADR_FPB0 => fpb0 <= std_logic_vector(s_data(7 downto 0)); 
 
-              when ADR_FPCR => fpcr <= std_logic_vector(s_data);
+              when ADR_FPCR => fpcr <= std_logic_vector(s_data(7 downto 0)); 
 
-              when ADR_FPR3 => fpr3 <= std_logic_vector(s_data);
-              when ADR_FPR2 => fpr2 <= std_logic_vector(s_data);
-              when ADR_FPR1 => fpr1 <= std_logic_vector(s_data);
-              when ADR_FPR0 => fpr0 <= std_logic_vector(s_data);
+              when ADR_FPR3 => fpr3 <= std_logic_vector(s_data(7 downto 0)); 
+              when ADR_FPR2 => fpr2 <= std_logic_vector(s_data(7 downto 0));
+              when ADR_FPR1 => fpr1 <= std_logic_vector(s_data(7 downto 0));
+              when ADR_FPR0 => fpr0 <= std_logic_vector(s_data(7 downto 0)); 
 
               when others => NULL; 
               end case; 
-                                   -- write one byte to bitadressable GPR 
+                                                 -- write one byte to bitadressable GPR 
             elsif conv_std_logic_vector(s_adr(7 downto 4),4)="0010" then   
-              gprbit(conv_integer(s_adr(3 downto 0))) <= s_data; 
+              gprbit(conv_integer(s_adr(3 downto 0))) <= s_data(7 downto 0); 
             elsif conv_std_logic_vector(s_adr,8)="00000000" then
-              s_r0_b0 <= s_data;         -- write R0 / Bank 0
+              s_r0_b0 <= s_data;      
             elsif conv_std_logic_vector(s_adr,8)="00000001" then
-              s_r1_b0 <= s_data;         -- write R1 / Bank 0
+              s_r1_b0 <= s_data;         
             elsif conv_std_logic_vector(s_adr,8)="00001000" then
-              s_r0_b1 <= s_data;         -- write R0 / Bank 1
+              s_r0_b1 <= s_data;      
             elsif conv_std_logic_vector(s_adr,8)="00001001" then
-              s_r1_b1 <= s_data;         -- write R1 / Bank 1
+              s_r1_b1 <= s_data;      
             elsif conv_std_logic_vector(s_adr,8)="00010000" then
-              s_r0_b2 <= s_data;         -- write R0 / Bank 2
+              s_r0_b2 <= s_data;      
             elsif conv_std_logic_vector(s_adr,8)="00010001" then
-              s_r1_b2 <= s_data;         -- write R1 / Bank 2
+              s_r1_b2 <= s_data;   
             elsif conv_std_logic_vector(s_adr,8)="00011000" then
-              s_r0_b3 <= s_data;         -- write R0 / Bank 3
+              s_r0_b3 <= s_data;       
             elsif conv_std_logic_vector(s_adr,8)="00011001" then
-              s_r1_b3 <= s_data;         -- write R1 / Bank 3
-            else                               -- write on general purpose RAM 
+              s_r1_b3 <= s_data;         
+            else                         -- write on general purpose RAM 
               NULL;
-            end if; 
+            end if;
           when "110" => 
             if (s_intblock='0' and s_intpre='1' and state=FETCH) or s_intpre2='1' or
                (s_command /= ANL_C_BIT and
@@ -1213,7 +1240,7 @@ for_siu_edge:
             case s_command is 
               when DA_A | RLC_A | RRC_A =>     -- write ACC, CY 
                 acc <= s_data; 
-                psw(7) <= new_cy_i(1);
+                psw(7) <= new_cy_i(7);
               when DIV_AB | MUL_AB =>          -- write ACC, B, CY, OV 
                 acc <= s_data; 
                 b <= unsigned(aludatb_i); 

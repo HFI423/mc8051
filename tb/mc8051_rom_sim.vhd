@@ -64,7 +64,7 @@
 -------------------------------------------------------------------------------
 architecture sim of mc8051_rom is
 
-   type   rom_type is array (65535 downto 0) of bit_vector(7 downto 0); 
+   type   rom_type is array (65535 downto 0) of bit_vector(31 downto 0); 
    signal s_init : boolean := false;
 
 begin

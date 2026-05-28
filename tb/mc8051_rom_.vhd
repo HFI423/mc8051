@@ -76,7 +76,7 @@ entity mc8051_rom is
 
   port (clk        : in  std_logic;  			  -- clock signal
         reset      : in  std_logic;  			  -- reset signal
-        rom_data_o : out std_logic_vector(7 downto 0);    -- data output
+        rom_data_o : out std_logic_vector(31 downto 0);    -- data output
         rom_adr_i  : in  std_logic_vector(15 downto 0));  -- adresses
 
 end mc8051_rom;

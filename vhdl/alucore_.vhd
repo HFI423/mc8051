@@ -45,7 +45,7 @@
 -------------------------------------------------------------------------------
 --
 --
---         Author:                 Roland Höller
+--         Author:                 Roland Hller
 --
 --         Filename:               alucore_.vhd
 --
@@ -72,7 +72,7 @@ use work.mc8051_p.all;
 
 entity alucore is
 
-  generic (DWIDTH : integer := 8);      -- Data width of the ALU
+  generic (DWIDTH : integer := 32);      -- Data width of the ALU
 
   port (op_a_i    : in std_logic_vector(DWIDTH-1 downto 0);
         op_b_i    : in std_logic_vector(DWIDTH-1 downto 0);

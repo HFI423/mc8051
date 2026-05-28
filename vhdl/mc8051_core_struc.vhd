@@ -68,14 +68,14 @@ architecture struc of mc8051_core is
 
   -- signals connecting the control unit with the rest
       
-  signal s_reg_data:     std_logic_vector(7 downto 0);    -- data for ALU
-  signal s_cy :          std_logic_vector(1 downto 0);    -- Carry Flag
+  signal s_reg_data:     std_logic_vector(31 downto 0);    -- data for ALU
+  signal s_cy :          std_logic_vector(7 downto 0);    -- Carry Flag
   signal s_ov :          std_logic;                       -- Overflow Flag
   signal s_alu_cmd:      std_logic_vector (5 downto 0);   -- ALU operationscode
-  signal s_alu_data0:    std_logic_vector (7 downto 0);   -- ALU result
-  signal s_alu_data1:    std_logic_vector (7 downto 0);   -- 2nd ALU result
-  signal s_acc:          std_logic_vector (7 downto 0);   -- ACC register 
-  signal s_cyb:          std_logic_vector (1 downto 0);   -- CY result of ALU 
+  signal s_alu_data0:    std_logic_vector (31 downto 0);   -- ALU result
+  signal s_alu_data1:    std_logic_vector (31 downto 0);   -- 2nd ALU result
+  signal s_acc:          std_logic_vector (31 downto 0);   -- ACC register 
+  signal s_cyb:          std_logic_vector (7 downto 0);   -- CY result of ALU 
   signal s_ovb:          std_logic;                       -- OV result of ALU 
   signal s_reset:        std_logic;                       -- reset signal
   signal s_clk:          std_logic;                       -- clock signal
@@ -161,7 +161,7 @@ begin                 -- architecture structural
   
     
   i_mc8051_alu : mc8051_alu
-    generic map (DWIDTH   => 8)
+    generic map (DWIDTH   => 32)
     port map(rom_data_i => rom_data_i,    -- inputs to mc8051_alu
              ram_data_i => s_reg_data,
              acc_i      => s_acc,

@@ -45,7 +45,7 @@
 -------------------------------------------------------------------------------
 --
 --
---         Author:                 Roland Höller
+--         Author:                 Roland Hller
 --
 --         Filename:               comb_divider_.vhd
 --
@@ -71,7 +71,7 @@ use IEEE.std_logic_arith.all;
 
 entity comb_divider is
 
-  generic (DWIDTH : integer := 8);
+  generic (DWIDTH : integer := 32);
   
   port (dvdnd_i :  in  std_logic_vector(DWIDTH-1 downto 0);  -- Dividend
         dvsor_i :  in  std_logic_vector(DWIDTH-1 downto 0);  -- Divisor

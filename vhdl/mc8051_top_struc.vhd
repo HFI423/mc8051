@@ -67,18 +67,18 @@ architecture struc of mc8051_top is
     
   signal s_rom_adr:      std_logic_vector(15 downto 0);  -- Programmcounter =
                                                          -- ROM-adress
-  signal s_rom_data:     std_logic_vector(7 downto 0);   -- data input from ROM
-  signal s_ram_data_out: std_logic_vector(7 downto 0);   -- data output to
+  signal s_rom_data:     std_logic_vector(31 downto 0);   -- data input from ROM
+  signal s_ram_data_out: std_logic_vector(31 downto 0);   -- data output to
                                                          -- internal RAM
-  signal s_ram_data_in:  std_logic_vector(7 downto 0);   -- data input from
+  signal s_ram_data_in:  std_logic_vector(31 downto 0);   -- data input from
                                                          -- internal RAM
   signal s_ram_adr:      std_logic_vector(6 downto 0);   -- internal RAM-adress
   signal s_ram_wr:       std_logic;                      -- read (0)/write (1)
                                                          -- internal RAM
   signal s_ram_en:       std_logic;                      -- RAM-block enable
-  signal s_ramx_data_out: std_logic_vector(7 downto 0);  -- data output to
+  signal s_ramx_data_out: std_logic_vector(31 downto 0);  -- data output to
                                                          -- ext. RAM
-  signal s_ramx_data_in:  std_logic_vector(7 downto 0);  -- data input from
+  signal s_ramx_data_in:  std_logic_vector(31 downto 0);  -- data input from
                                                          -- ext. RAM
   signal s_ramx_adr:      std_logic_vector(15 downto 0); -- ext. RAM-adress
   signal s_ramx_wr:       std_logic;                     -- read (0)/write (1)

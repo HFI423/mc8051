@@ -64,7 +64,7 @@
 -------------------------------------------------------------------------------
 architecture sim of mc8051_ram is
 
-   type   ram_type is array (127 downto 0) of unsigned(7 downto 0); 
+   type   ram_type is array (127 downto 0) of unsigned(31 downto 0); 
 
    signal gpram:        ram_type;             -- general purpose RAM 
 
@@ -78,7 +78,7 @@ begin
   p_read : process (clk, reset)
   begin
     if reset='1' then
-      ram_data_o <= "00000000";
+      ram_data_o <= (others => '0');
     else
       if Rising_Edge(clk) then
         ram_data_o <= std_logic_vector(gpram(conv_integer(unsigned(ram_adr_i))));

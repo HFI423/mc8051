@@ -45,7 +45,7 @@
 -------------------------------------------------------------------------------
 --
 --
---         Author:                 Roland Höller
+--         Author:                 Roland Hller
 --
 --         Filename:               comb_mltplr_.vhd
 --
@@ -71,7 +71,7 @@ use IEEE.std_logic_arith.all;
 
 entity comb_mltplr is
 
-  generic (DWIDTH : integer := 8);
+  generic (DWIDTH : integer := 32);
 
   port (mltplcnd_i : in  std_logic_vector(DWIDTH-1 downto 0);  -- Multiplicand
         mltplctr_i : in  std_logic_vector(DWIDTH-1 downto 0);  -- Multiplicator

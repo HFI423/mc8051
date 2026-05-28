@@ -86,7 +86,7 @@ architecture struc of mc8051_control is
   signal s_nextstate  : t_state;  	-- enable signal for state
   signal state        : t_state;  	-- actual state 
   signal s_command    : std_logic_vector (7 downto 0);
-  signal s_help       : std_logic_vector(7 downto 0);  -- general help-register
+  signal s_help       : std_logic_vector(31 downto 0);  -- general help-register
   signal s_bit_data   : std_logic;
   signal s_intpre     : std_logic;  	-- an interrupt must start 
   signal s_intpre2    : std_logic;  	-- prepare for interrupt 
@@ -102,7 +102,7 @@ architecture struc of mc8051_control is
   signal ie           : std_logic_vector(7 downto 0);
   signal ip           : std_logic_vector(7 downto 0);
   signal psw          : std_logic_vector(7 downto 0);
-  signal acc          : std_logic_vector(7 downto 0);
+  signal acc          : std_logic_vector(31 downto 0);
   signal s_ext0isr_d   : std_logic;
   signal s_ext1isr_d   : std_logic;
   signal s_ext0isrh_d  : std_logic;

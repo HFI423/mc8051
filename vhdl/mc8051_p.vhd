@@ -45,7 +45,7 @@
 -------------------------------------------------------------------------------
 --
 --
---         Author:                 Roland Höller
+--         Author:                 Roland Hller
 --
 --         Filename:               mc8051_p.vhd
 --
@@ -71,7 +71,7 @@ package mc8051_p is
   -----------------------------------------------------------------------------
   -- Set data width of mc8051_alu (no other than 8 supported at the moment!)
   -- Default: 8
-  constant C_DWIDTH : integer := 8;
+  constant C_DWIDTH : integer := 32;
   -----------------------------------------------------------------------------
 
   -----------------------------------------------------------------------------
@@ -557,9 +557,9 @@ package mc8051_p is
 
   component control_fsm
     port ( state_i     : in t_state;    -- actual state
-            help_i     : in std_logic_vector (7 downto 0);  -- general help-reg
+            help_i     : in std_logic_vector (31 downto 0);  -- general help-reg
             bit_data_i : in std_logic;  -- bitdata from regs
-            aludata_i  : in std_logic_vector (7 downto 0);  -- ALU result
+            aludata_i  : in std_logic_vector (31 downto 0);  -- ALU result
             command_i  : in std_logic_vector (7 downto 0);  -- actual command
             inthigh_i  : in std_logic;  -- high priority int is running
             intlow_i   : in std_logic;  -- low priority int is running
@@ -572,7 +572,7 @@ package mc8051_p is
             ie1_i      : in std_logic;
             tf0_i      : in std_logic;
             tf1_i      : in std_logic;
-            acc        : in std_logic_vector(7 downto 0);
+            acc        : in std_logic_vector(31 downto 0);
             psw        : in std_logic_vector(7 downto 0);
             ie         : in std_logic_vector(7 downto 0);
             ip         : in std_logic_vector(7 downto 0);
@@ -608,32 +608,32 @@ package mc8051_p is
 
   component control_mem
     port (pc_o           : out std_logic_vector(15 downto 0);
-          rom_data_i     : in  std_logic_vector(7 downto 0);
-          ram_data_o     : out std_logic_vector(7 downto 0);
-          ram_data_i     : in  std_logic_vector(7 downto 0);
+          rom_data_i     : in  std_logic_vector(31 downto 0);
+          ram_data_o     : out std_logic_vector(31 downto 0);
+          ram_data_i     : in  std_logic_vector(31 downto 0);
           ram_adr_o      : out std_logic_vector(6 downto 0);
-          reg_data_o     : out std_logic_vector(7 downto 0);
+          reg_data_o     : out std_logic_vector(31 downto 0);
           ram_wr_o       : out std_logic;
-          cy_o           : out std_logic_vector(1 downto 0);
+          cy_o           : out std_logic_vector(7 downto 0);
           ov_o           : out std_logic;
           ram_en_o       : out std_logic;
-          aludata_i      : in  std_logic_vector (7 downto 0);
-          aludatb_i      : in  std_logic_vector (7 downto 0);
-          acc_o          : out std_logic_vector (7 downto 0);
-          new_cy_i       : in  std_logic_vector(1 downto 0);
+          aludata_i      : in  std_logic_vector (31 downto 0);
+          aludatb_i      : in  std_logic_vector (31 downto 0);
+          acc_o          : out std_logic_vector (31 downto 0);
+          new_cy_i       : in  std_logic_vector(7 downto 0);
           new_ov_i       : in  std_logic;
           reset          : in  std_logic;
           clk            : in  std_logic;
           int0_i         : in  std_logic_vector(C_IMPL_N_EXT-1 downto 0);
           int1_i         : in  std_logic_vector(C_IMPL_N_EXT-1 downto 0);
-          p0_i           : in  std_logic_vector(7 downto 0);
-          p1_i           : in  std_logic_vector(7 downto 0);
-          p2_i           : in  std_logic_vector(7 downto 0);
-          p3_i           : in  std_logic_vector(7 downto 0);
-          p0_o           : out std_logic_vector(7 downto 0);
-          p1_o           : out std_logic_vector(7 downto 0);
-          p2_o           : out std_logic_vector(7 downto 0);
-          p3_o           : out std_logic_vector(7 downto 0);
+          p0_i           : in  std_logic_vector(31 downto 0);
+          p1_i           : in  std_logic_vector(31 downto 0);
+          p2_i           : in  std_logic_vector(31 downto 0);
+          p3_i           : in  std_logic_vector(31 downto 0);
+          p0_o           : out std_logic_vector(31 downto 0);
+          p1_o           : out std_logic_vector(31 downto 0);
+          p2_o           : out std_logic_vector(31 downto 0);
+          p3_o           : out std_logic_vector(31 downto 0);
           all_trans_o    : out std_logic_vector(C_IMPL_N_SIU-1 downto 0);
           all_scon_o     : out std_logic_vector(6*C_IMPL_N_SIU-1 downto 0);
           all_sbuf_o     : out std_logic_vector(8*C_IMPL_N_SIU-1 downto 0);
@@ -653,7 +653,7 @@ package mc8051_p is
           all_th0_i      : in  std_logic_vector(8*C_IMPL_N_TMR-1 downto 0);
           all_th1_i      : in  std_logic_vector(8*C_IMPL_N_TMR-1 downto 0);
           state_o        : out t_state;
-          help_o         : out std_logic_vector(7 downto 0);
+          help_o         : out std_logic_vector(31 downto 0);
           bit_data_o     : out std_logic;
           command_o      : out std_logic_vector (7 downto 0);
           inthigh_o      : out std_logic;
@@ -671,9 +671,9 @@ package mc8051_p is
           ie_o           : out std_logic_vector(7 downto 0);
           ip_o           : out std_logic_vector(7 downto 0);
           adrx_o         : out std_logic_vector(15 downto 0);
-          datax_o        : out std_logic_vector(7 downto 0);
+          datax_o        : out std_logic_vector(31 downto 0);
           wrx_o          : out std_logic;
-          datax_i        : in  std_logic_vector(7 downto 0);
+          datax_i        : in  std_logic_vector(31 downto 0);
           pc_inc_en_i    : in  std_logic_vector (3 downto 0);
           nextstate_i    : in  t_state;
           adr_mux_i      : in  std_logic_vector (3 downto 0);
@@ -704,37 +704,37 @@ package mc8051_p is
 
   component mc8051_control
     port (pc_o           : out std_logic_vector(15 downto 0);
-          rom_data_i     : in  std_logic_vector(7 downto 0);
-          ram_data_o     : out std_logic_vector(7 downto 0);
-          ram_data_i     : in  std_logic_vector(7 downto 0);
+          rom_data_i     : in  std_logic_vector(31 downto 0);
+          ram_data_o     : out std_logic_vector(31 downto 0);
+          ram_data_i     : in  std_logic_vector(31 downto 0);
           ram_adr_o      : out std_logic_vector(6 downto 0);
-          reg_data_o     : out std_logic_vector(7 downto 0);
+          reg_data_o     : out std_logic_vector(31 downto 0);
           ram_wr_o       : out std_logic;
-          cy_o           : out std_logic_vector(1 downto 0);
+          cy_o           : out std_logic_vector(7 downto 0);
           ov_o           : out std_logic;
           ram_en_o       : out std_logic;
           alu_cmd_o      : out std_logic_vector (5 downto 0);
-          aludata_i      : in  std_logic_vector (7 downto 0);
-          aludatb_i      : in  std_logic_vector (7 downto 0);
-          acc_o          : out std_logic_vector (7 downto 0);
-          new_cy_i       : in  std_logic_vector(1 downto 0);
+          aludata_i      : in  std_logic_vector (31 downto 0);
+          aludatb_i      : in  std_logic_vector (31 downto 0);
+          acc_o          : out std_logic_vector (31 downto 0);
+          new_cy_i       : in  std_logic_vector(7 downto 0);
           new_ov_i       : in  std_logic;
           reset          : in  std_logic;
           clk            : in  std_logic;
           int0_i         : in  std_logic_vector(C_IMPL_N_EXT-1 downto 0);
           int1_i         : in  std_logic_vector(C_IMPL_N_EXT-1 downto 0);
-          datax_i        : in  std_logic_vector (7 downto 0);
-          datax_o        : out std_logic_vector (7 downto 0);
+          datax_i        : in  std_logic_vector (31 downto 0);
+          datax_o        : out std_logic_vector (31 downto 0);
           adrx_o         : out std_logic_vector (15 downto 0);
           wrx_o          : out std_logic;
-          p0_i           : in  std_logic_vector(7 downto 0);
-          p1_i           : in  std_logic_vector(7 downto 0);
-          p2_i           : in  std_logic_vector(7 downto 0);
-          p3_i           : in  std_logic_vector(7 downto 0);
-          p0_o           : out std_logic_vector(7 downto 0);
-          p1_o           : out std_logic_vector(7 downto 0);
-          p2_o           : out std_logic_vector(7 downto 0);
-          p3_o           : out std_logic_vector(7 downto 0);
+          p0_i           : in  std_logic_vector(31 downto 0);
+          p1_i           : in  std_logic_vector(31 downto 0);
+          p2_i           : in  std_logic_vector(31 downto 0);
+          p3_i           : in  std_logic_vector(31 downto 0);
+          p0_o           : out std_logic_vector(31 downto 0);
+          p1_o           : out std_logic_vector(31 downto 0);
+          p2_o           : out std_logic_vector(31 downto 0);
+          p3_o           : out std_logic_vector(31 downto 0);
           all_trans_o    : out std_logic_vector(C_IMPL_N_SIU-1 downto 0);
           all_scon_o     : out std_logic_vector(6*C_IMPL_N_SIU-1 downto 0);
           all_sbuf_o     : out std_logic_vector(8*C_IMPL_N_SIU-1 downto 0);
@@ -760,31 +760,31 @@ package mc8051_p is
   component mc8051_core
     port (clk         : in  std_logic;
           reset       : in  std_logic;
-          rom_data_i  : in  std_logic_vector(7 downto 0);
-          ram_data_i  : in  std_logic_vector(7 downto 0);
+          rom_data_i  : in  std_logic_vector(31 downto 0);
+          ram_data_i  : in  std_logic_vector(31 downto 0);
           int0_i      : in  std_logic_vector(C_IMPL_N_EXT-1 downto 0);
           int1_i      : in  std_logic_vector(C_IMPL_N_EXT-1 downto 0);
           all_t0_i    : in  std_logic_vector(C_IMPL_N_TMR-1 downto 0);
           all_t1_i    : in  std_logic_vector(C_IMPL_N_TMR-1 downto 0);
           all_rxd_i   : in  std_logic_vector(C_IMPL_N_SIU-1 downto 0);
-          p0_i        : in  std_logic_vector(7 downto 0);
-          p1_i        : in  std_logic_vector(7 downto 0);
-          p2_i        : in  std_logic_vector(7 downto 0);
-          p3_i        : in  std_logic_vector(7 downto 0);
-          p0_o        : out std_logic_vector(7 downto 0);
-          p1_o        : out std_logic_vector(7 downto 0);
-          p2_o        : out std_logic_vector(7 downto 0);
-          p3_o        : out std_logic_vector(7 downto 0);
+          p0_i        : in  std_logic_vector(31 downto 0);
+          p1_i        : in  std_logic_vector(31 downto 0);
+          p2_i        : in  std_logic_vector(31 downto 0);
+          p3_i        : in  std_logic_vector(31 downto 0);
+          p0_o        : out std_logic_vector(31 downto 0);
+          p1_o        : out std_logic_vector(31 downto 0);
+          p2_o        : out std_logic_vector(31 downto 0);
+          p3_o        : out std_logic_vector(31 downto 0);
           all_rxd_o   : out std_logic_vector(C_IMPL_N_SIU-1 downto 0);
           all_txd_o   : out std_logic_vector(C_IMPL_N_SIU-1 downto 0);
           all_rxdwr_o : out std_logic_vector(C_IMPL_N_SIU-1 downto 0);
           rom_adr_o   : out std_logic_vector(15 downto 0);
-          ram_data_o  : out std_logic_vector(7 downto 0);
+          ram_data_o  : out std_logic_vector(31 downto 0);
           ram_adr_o   : out std_logic_vector(6 downto 0);
           ram_wr_o    : out std_logic;
           ram_en_o    : out std_logic;
-          datax_i     : in  std_logic_vector (7 downto 0);
-          datax_o     : out std_logic_vector (7 downto 0);
+          datax_i     : in  std_logic_vector (31 downto 0);
+          datax_o     : out std_logic_vector (31 downto 0);
           adrx_o      : out std_logic_vector (15 downto 0);
           wrx_o       : out std_logic);
 
@@ -799,14 +799,14 @@ package mc8051_p is
           all_t0_i    : in  std_logic_vector(C_IMPL_N_TMR-1 downto 0);
           all_t1_i    : in  std_logic_vector(C_IMPL_N_TMR-1 downto 0);
           all_rxd_i   : in  std_logic_vector(C_IMPL_N_SIU-1 downto 0);
-          p0_i        : in  std_logic_vector(7 downto 0);
-          p1_i        : in  std_logic_vector(7 downto 0);
-          p2_i        : in  std_logic_vector(7 downto 0);
-          p3_i        : in  std_logic_vector(7 downto 0);
-          p0_o        : out std_logic_vector(7 downto 0);
-          p1_o        : out std_logic_vector(7 downto 0);
-          p2_o        : out std_logic_vector(7 downto 0);
-          p3_o        : out std_logic_vector(7 downto 0);
+          p0_i        : in  std_logic_vector(31 downto 0);
+          p1_i        : in  std_logic_vector(31 downto 0);
+          p2_i        : in  std_logic_vector(31 downto 0);
+          p3_i        : in  std_logic_vector(31 downto 0);
+          p0_o        : out std_logic_vector(31 downto 0);
+          p1_o        : out std_logic_vector(31 downto 0);
+          p2_o        : out std_logic_vector(31 downto 0);
+          p3_o        : out std_logic_vector(31 downto 0);
           all_rxd_o   : out std_logic_vector(C_IMPL_N_SIU-1 downto 0);
           all_txd_o   : out std_logic_vector(C_IMPL_N_SIU-1 downto 0);
           all_rxdwr_o : out std_logic_vector(C_IMPL_N_SIU-1 downto 0));  
@@ -819,8 +819,8 @@ package mc8051_p is
   component mc8051_ram
     port (clk        : in  std_logic;
 	  reset      : in  std_logic;
-	  ram_data_i : in  std_logic_vector(7 downto 0);
-          ram_data_o : out std_logic_vector(7 downto 0);
+	  ram_data_i : in  std_logic_vector(31 downto 0);
+          ram_data_o : out std_logic_vector(31 downto 0);
           ram_adr_i  : in  std_logic_vector(6 downto 0);
           ram_wr_i   : in  std_logic;
           ram_en_i   : in  std_logic);
@@ -830,8 +830,8 @@ package mc8051_p is
   component mc8051_ramx
     port (clk        : in  std_logic;
 	  reset      : in  std_logic;
-	  ram_data_i : in  std_logic_vector(7 downto 0);
-          ram_data_o : out std_logic_vector(7 downto 0);
+	  ram_data_i : in  std_logic_vector(31 downto 0);
+          ram_data_o : out std_logic_vector(31 downto 0);
           ram_adr_i  : in  std_logic_vector(15 downto 0);
           ram_wr_i   : in  std_logic);
 
@@ -840,7 +840,7 @@ package mc8051_p is
   component mc8051_rom
     port (clk        : in  std_logic;
 	  reset      : in  std_logic;
-	  rom_data_o : out std_logic_vector(7 downto 0); 
+	  rom_data_o : out std_logic_vector(31 downto 0); 
           rom_adr_i  : in  std_logic_vector(15 downto 0));
     
   end component;

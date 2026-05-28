@@ -64,7 +64,7 @@
 -------------------------------------------------------------------------------
 architecture sim of mc8051_ramx is
 
-   type   ram_type is array (65535 downto 0) of bit_vector(7 downto 0);
+   type   ram_type is array (65535 downto 0) of bit_vector(31 downto 0);
 
 begin
 
@@ -76,7 +76,7 @@ begin
   variable  gpram: ram_type;                  -- general purpose RAM
   begin
     if reset='1' then
-      ram_data_o <= "00000000";
+      ram_data_o <= (others => '0');
       gpram := (others => (others =>'0'));    -- reset every bit
     else
       if Rising_Edge(clk) then

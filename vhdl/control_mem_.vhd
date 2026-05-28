@@ -76,37 +76,37 @@ entity control_mem is
 
   port (pc_o       : out std_logic_vector(15 downto 0);  -- Programmcounter =
   							 -- ROM-adress
-        rom_data_i : in  std_logic_vector(7 downto 0);   -- data input from ROM
-        ram_data_o : out std_logic_vector(7 downto 0);   -- data output to
+        rom_data_i : in  std_logic_vector(31 downto 0);   -- data input from ROM
+        ram_data_o : out std_logic_vector(31 downto 0);   -- data output to
   							 -- internal RAM
-        ram_data_i : in  std_logic_vector(7 downto 0);   -- data input from
+        ram_data_i : in  std_logic_vector(31 downto 0);   -- data input from
   							 -- internal RAM
         ram_adr_o  : out std_logic_vector(6 downto 0);   -- internal RAM-adress
-        reg_data_o : out std_logic_vector(7 downto 0);   -- data for ALU
+        reg_data_o : out std_logic_vector(31 downto 0);   -- data for ALU
         ram_wr_o   : out std_logic;  	-- read (0) / write (1)
   					-- internal RAM
-        cy_o       : out std_logic_vector(1 downto 0);   -- Carry Flag
+        cy_o       : out std_logic_vector(7 downto 0);   -- Carry Flag
         ov_o       : out std_logic;  	-- Overflow Flag
         ram_en_o   : out std_logic;  	-- RAM-block enable
-        aludata_i  : in  std_logic_vector (7 downto 0);  -- ALU result
-        aludatb_i  : in  std_logic_vector (7 downto 0);  -- 2nd ALU result
-        acc_o      : out std_logic_vector (7 downto 0);  -- ACC register
-        new_cy_i   : in  std_logic_vector(1 downto 0);   -- CY result of ALU
+        aludata_i  : in  std_logic_vector (31 downto 0);  -- ALU result
+        aludatb_i  : in  std_logic_vector (31 downto 0);  -- 2nd ALU result
+        acc_o      : out std_logic_vector (31 downto 0);  -- ACC register
+        new_cy_i   : in  std_logic_vector(7 downto 0);   -- CY result of ALU
         new_ov_i   : in  std_logic;  	-- OV result of ALU
         reset      : in  std_logic;  	-- reset signal
         clk        : in  std_logic;  	-- clock signal
         int0_i     : in  std_logic_vector(C_IMPL_N_EXT-1 downto 0);  -- ext.Int
         int1_i     : in  std_logic_vector(C_IMPL_N_EXT-1 downto 0);  -- ext.Int
 
-        p0_i : in std_logic_vector(7 downto 0);  -- IO-port0
-        p1_i : in std_logic_vector(7 downto 0);  -- IO-port1
-        p2_i : in std_logic_vector(7 downto 0);  -- IO-port2
-        p3_i : in std_logic_vector(7 downto 0);  -- IO-port3
+        p0_i : in std_logic_vector(31 downto 0);  -- IO-port0
+        p1_i : in std_logic_vector(31 downto 0);  -- IO-port1
+        p2_i : in std_logic_vector(31 downto 0);  -- IO-port2
+        p3_i : in std_logic_vector(31 downto 0);  -- IO-port3
 
-        p0_o : out std_logic_vector(7 downto 0);  -- IO-port0
-        p1_o : out std_logic_vector(7 downto 0);  -- IO-port1
-        p2_o : out std_logic_vector(7 downto 0);  -- IO-port2
-        p3_o : out std_logic_vector(7 downto 0);  -- IO-port3
+        p0_o : out std_logic_vector(31 downto 0);  -- IO-port0
+        p1_o : out std_logic_vector(31 downto 0);  -- IO-port1
+        p2_o : out std_logic_vector(31 downto 0);  -- IO-port2
+        p3_o : out std_logic_vector(31 downto 0);  -- IO-port3
 
         -- Signals to and from the SIUs
 
@@ -153,7 +153,7 @@ entity control_mem is
         -- signals from/to the state-machine
 
         state_o    : out t_state;  	-- actual state
-        help_o     : out std_logic_vector(7 downto 0);   -- general help-reg
+        help_o     : out std_logic_vector(31 downto 0);   -- general help-reg
         bit_data_o : out std_logic;  	-- bitdata from regs
         command_o  : out std_logic_vector (7 downto 0);  -- actual command
         inthigh_o  : out std_logic;  	-- high priority int is running
@@ -171,10 +171,10 @@ entity control_mem is
         ie_o       : out std_logic_vector(7 downto 0);
         ip_o       : out std_logic_vector(7 downto 0);
         adrx_o     : out std_logic_vector(15 downto 0);  -- ext. RAM
-        datax_o    : out std_logic_vector(7 downto 0);   -- ext. RAM
+        datax_o    : out std_logic_vector(31 downto 0);   -- ext. RAM
         wrx_o      : out std_logic;  	-- ext. RAM
 
-        datax_i      : in std_logic_vector(7 downto 0);  -- ext. RAM
+        datax_i      : in std_logic_vector(31 downto 0);  -- ext. RAM
         pc_inc_en_i  : in std_logic_vector (3 downto 0);
         nextstate_i  : in t_state;  	-- enable signal for state
         adr_mux_i    : in std_logic_vector (3 downto 0);

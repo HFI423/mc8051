@@ -83,15 +83,15 @@ entity mc8051_top is
         all_t1_i  : in std_logic_vector(C_IMPL_N_TMR-1 downto 0);
         -- serial input for SIU
         all_rxd_i : in std_logic_vector(C_IMPL_N_SIU-1 downto 0);
-        p0_i      : in std_logic_vector(7 downto 0);  -- IO-port0 input
-        p1_i      : in std_logic_vector(7 downto 0);  -- IO-port1 input
-        p2_i      : in std_logic_vector(7 downto 0);  -- IO-port2 input
-        p3_i      : in std_logic_vector(7 downto 0);  -- IO-port3 input 
+        p0_i      : in std_logic_vector(31 downto 0);  -- IO-port0 input
+        p1_i      : in std_logic_vector(31 downto 0);  -- IO-port1 input
+        p2_i      : in std_logic_vector(31 downto 0);  -- IO-port2 input
+        p3_i      : in std_logic_vector(31 downto 0);  -- IO-port3 input 
 
-        p0_o        : out std_logic_vector(7 downto 0);  -- IO-port0 output
-        p1_o        : out std_logic_vector(7 downto 0);  -- IO-port1 output
-        p2_o        : out std_logic_vector(7 downto 0);  -- IO-port2 output
-        p3_o        : out std_logic_vector(7 downto 0);  -- IO-port3 output
+        p0_o        : out std_logic_vector(31 downto 0);  -- IO-port0 output
+        p1_o        : out std_logic_vector(31 downto 0);  -- IO-port1 output
+        p2_o        : out std_logic_vector(31 downto 0);  -- IO-port2 output
+        p3_o        : out std_logic_vector(31 downto 0);  -- IO-port3 output
         -- Mode 0 serial output for SIU
         all_rxd_o   : out std_logic_vector(C_IMPL_N_SIU-1 downto 0);
         -- serial output for SIU 

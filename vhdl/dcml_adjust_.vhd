@@ -45,7 +45,7 @@
 -------------------------------------------------------------------------------
 --
 --
---         Author:                 Roland Höller
+--         Author:                 Roland Hller
 --
 --         Filename:               dcml_adjust_.vhd
 --
@@ -71,7 +71,7 @@ use IEEE.std_logic_arith.all;
 
 entity dcml_adjust is
 
-  generic (DWIDTH : integer := 12);
+  generic (DWIDTH : integer := 32);
   
   port (data_i  :  in  std_logic_vector(DWIDTH-1 downto 0);       
         cy_i    :  in  std_logic_vector((DWIDTH-1)/4 downto 0); 

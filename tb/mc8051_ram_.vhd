@@ -70,8 +70,8 @@ entity mc8051_ram is
 
   port (clk        : in  std_logic;  			-- clock signal
         reset      : in  std_logic;  			-- reset signal
-        ram_data_i : in  std_logic_vector(7 downto 0);  -- data input
-        ram_data_o : out std_logic_vector(7 downto 0);  -- data output
+        ram_data_i : in  std_logic_vector(31 downto 0);  -- data input
+        ram_data_o : out std_logic_vector(31 downto 0);  -- data output
         ram_adr_i  : in  std_logic_vector(6 downto 0);  -- adresses
         ram_wr_i   : in  std_logic;  			-- read=0, write=1 
         ram_en_i   : in  std_logic);  			-- inactive=0;active=1 

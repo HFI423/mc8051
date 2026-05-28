@@ -45,7 +45,7 @@
 -------------------------------------------------------------------------------
 --
 --
---         Author:                 Roland Höller
+--         Author:                 Roland Hller
 --
 --         Filename:               mc8051_alu_.vhd
 --
@@ -74,7 +74,7 @@ use work.mc8051_p.all;
 
 entity mc8051_alu is
 
-  generic (DWIDTH : integer := 8);             -- Data width of the ALU
+  generic (DWIDTH : integer := 32);             -- Data width of the ALU
 
   port (rom_data_i : in std_logic_vector(DWIDTH-1 downto 0);
         ram_data_i : in std_logic_vector(DWIDTH-1 downto 0);

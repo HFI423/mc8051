@@ -74,9 +74,9 @@ use work.mc8051_p.all;
 entity control_fsm is
 
   port (state_i    : in t_state;  	-- actual state
-        help_i     : in std_logic_vector (7 downto 0);  -- general help-reg
+        help_i     : in std_logic_vector (31 downto 0);  -- general help-reg
         bit_data_i : in std_logic;  	-- bitdata from regs
-        aludata_i  : in std_logic_vector (7 downto 0);  -- ALU result
+        aludata_i  : in std_logic_vector (31 downto 0);  -- ALU result
         command_i  : in std_logic_vector (7 downto 0);  -- actual command
         inthigh_i  : in std_logic;  	-- high priority int is running
         intlow_i   : in std_logic;  	-- low priority int is running
@@ -89,7 +89,7 @@ entity control_fsm is
         ie1_i      : in std_logic;
         tf0_i      : in std_logic;
         tf1_i      : in std_logic;
-        acc        : in std_logic_vector(7 downto 0);
+        acc        : in std_logic_vector(31 downto 0);
         psw        : in std_logic_vector(7 downto 0);
         ie         : in std_logic_vector(7 downto 0);
         ip         : in std_logic_vector(7 downto 0);
